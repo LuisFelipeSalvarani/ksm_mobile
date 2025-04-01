@@ -26,7 +26,7 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
         contentStyle: {
-          backgroundColor: colors.blue[400],
+          backgroundColor: colors.white,
         },
       }}
     />
