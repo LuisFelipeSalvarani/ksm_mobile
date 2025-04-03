@@ -1,6 +1,3 @@
-import { colors } from '@/styles/theme'
-import { Stack } from 'expo-router'
-
 import {
   Poppins_400Regular,
   Poppins_500Medium,
@@ -8,8 +5,14 @@ import {
   Poppins_700Bold,
   useFonts,
 } from '@expo-google-fonts/poppins'
-
+import { QueryClientProvider } from '@tanstack/react-query'
+import { router, Stack } from 'expo-router'
+import { useEffect, useState } from 'react'
 import { Loading } from '@/components/loading'
+import { useCheckAuthentication } from '@/http/endpoints/authentication/authentication'
+import { queryClient } from '@/lib/query-client'
+import { colors } from '@/styles/theme'
+import { getHeaders } from '@/utils/get-headers'
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -22,13 +25,15 @@ export default function Layout() {
   if (!fontsLoaded) return <Loading />
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          backgroundColor: colors.white,
-        },
-      }}
-    />
+    <QueryClientProvider client={queryClient}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: colors.white,
+          },
+        }}
+      />
+    </QueryClientProvider>
   )
 }
