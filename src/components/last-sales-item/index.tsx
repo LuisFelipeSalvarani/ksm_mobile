@@ -22,7 +22,9 @@ export function LastSalesItem({
 }: LastSalesItemProps) {
   return (
     <View style={s.container}>
-      <IconPackage size={36} color={colors.zinc[800]} />
+      <View style={s.icon}>
+        <IconPackage size={28} color={colors.zinc[50]} />
+      </View>
 
       <View style={s.infos}>
         <Text style={s.product}>{description}</Text>

@@ -87,7 +87,8 @@ export function CountLastSales() {
             backgroundGradientFrom: '#ffffff',
             backgroundGradientTo: '#ffffff',
             barPercentage: 0.7,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            color: (opacity = 1) => `rgba(0, 29, 155, ${opacity})`,
           }}
         />
       </View>

@@ -19,6 +19,14 @@ export const s = StyleSheet.create({
       },
     ],
   },
+  icon: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: colors.blue[600],
+  },
   infos: {
     flex: 1,
   },

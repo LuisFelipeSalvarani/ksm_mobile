@@ -25,8 +25,8 @@ export const s = StyleSheet.create({
     height: 56,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16,
-    backgroundColor: colors.zinc[600],
+    borderRadius: 14,
+    backgroundColor: colors.blue[600],
     boxShadow: [
       {
         color: colors.zinc[400],

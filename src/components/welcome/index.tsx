@@ -23,7 +23,7 @@ export function Welcome() {
 
   return (
     <View style={s.container}>
-      <IconUserCircle size={40} color={colors.black} />
+      <IconUserCircle size={40} color={colors.zinc[800]} />
 
       <View style={s.greeting}>
         <Text style={s.title}>Bem-vindo, {name}</Text>

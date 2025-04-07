@@ -29,9 +29,7 @@ export const s = StyleSheet.create({
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
-    backgroundColor: colors.zinc[600],
-    borderWidth: 2,
-    borderColor: colors.zinc[700],
+    borderRadius: 10,
+    backgroundColor: colors.blue[600],
   },
 })
