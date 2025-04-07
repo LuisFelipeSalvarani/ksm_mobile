@@ -1,0 +1,31 @@
+import { StyleSheet } from 'react-native'
+import { colors, fontFamily } from '@/styles/theme'
+
+export const s = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    gap: 4,
+  },
+  title: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+  },
+  titleChart: {
+    fontSize: 12,
+    fontFamily: fontFamily.medium,
+    marginBottom: 4,
+  },
+  card: {
+    padding: 16,
+    borderRadius: 16,
+    boxShadow: [
+      {
+        color: colors.zinc[300],
+        offsetX: 0,
+        offsetY: 6,
+        spreadDistance: 1,
+        blurRadius: 10,
+      },
+    ],
+  },
+})

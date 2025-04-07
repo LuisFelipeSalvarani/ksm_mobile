@@ -12,6 +12,8 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
+  GetLastTenSales200,
+  GetLastTenSales204,
   GetProductSalesHistory200,
   GetProductSalesHistory204,
   GetSalesByDaysOfTheLastWeek200,
@@ -483,6 +485,137 @@ export function useGetSalesByProductGroup<
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetSalesByProductGroupQueryOptions(options)
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>
+  }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary Get the last ten sales
+ */
+export const getGetLastTenSalesUrl = () => {
+  return `http://192.168.1.167:3333/sales/last/ten`
+}
+
+export const getLastTenSales = async (
+  options?: RequestInit
+): Promise<GetLastTenSales200 | GetLastTenSales204> => {
+  const res = await fetch(getGetLastTenSalesUrl(), {
+    ...options,
+    method: 'GET',
+  })
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: GetLastTenSales200 | GetLastTenSales204 = body
+    ? JSON.parse(body)
+    : {}
+
+  return data
+}
+
+export const getGetLastTenSalesQueryKey = () => {
+  return [`http://192.168.1.167:3333/sales/last/ten`] as const
+}
+
+export const getGetLastTenSalesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLastTenSales>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getLastTenSales>>, TError, TData>
+  >
+  fetch?: RequestInit
+}) => {
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+
+  const queryKey = queryOptions?.queryKey ?? getGetLastTenSalesQueryKey()
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLastTenSales>>> = ({
+    signal,
+  }) => getLastTenSales({ signal, ...fetchOptions })
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLastTenSales>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetLastTenSalesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLastTenSales>>
+>
+export type GetLastTenSalesQueryError = unknown
+
+export function useGetLastTenSales<
+  TData = Awaited<ReturnType<typeof getLastTenSales>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getLastTenSales>>, TError, TData>
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getLastTenSales>>,
+        TError,
+        Awaited<ReturnType<typeof getLastTenSales>>
+      >,
+      'initialData'
+    >
+  fetch?: RequestInit
+}): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetLastTenSales<
+  TData = Awaited<ReturnType<typeof getLastTenSales>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getLastTenSales>>, TError, TData>
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getLastTenSales>>,
+        TError,
+        Awaited<ReturnType<typeof getLastTenSales>>
+      >,
+      'initialData'
+    >
+  fetch?: RequestInit
+}): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetLastTenSales<
+  TData = Awaited<ReturnType<typeof getLastTenSales>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getLastTenSales>>, TError, TData>
+  >
+  fetch?: RequestInit
+}): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary Get the last ten sales
+ */
+
+export function useGetLastTenSales<
+  TData = Awaited<ReturnType<typeof getLastTenSales>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getLastTenSales>>, TError, TData>
+  >
+  fetch?: RequestInit
+}): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getGetLastTenSalesQueryOptions(options)
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>

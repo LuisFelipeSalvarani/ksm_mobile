@@ -1,0 +1,41 @@
+import { IconPackage } from '@tabler/icons-react-native'
+import dayjs from 'dayjs'
+import { Text, View } from 'react-native'
+import { colors } from '@/styles/theme'
+import { getCurrency } from '@/utils/currency-formater'
+import { s } from './styles'
+
+type LastSalesItemProps = {
+  description: string
+  companyName: string
+  date: string
+  total: string
+  quantity: string
+}
+
+export function LastSalesItem({
+  description,
+  companyName,
+  date,
+  total,
+  quantity,
+}: LastSalesItemProps) {
+  return (
+    <View style={s.container}>
+      <IconPackage size={36} color={colors.zinc[800]} />
+
+      <View style={s.infos}>
+        <Text style={s.product}>{description}</Text>
+        <Text numberOfLines={1} style={s.company}>
+          {companyName}
+        </Text>
+        <Text style={s.date}>Data: {dayjs(date).format('DD/MM/YYYY')}</Text>
+      </View>
+
+      <View style={s.counts}>
+        <Text style={s.total}>{getCurrency(total)}</Text>
+        <Text style={s.quantity}>Qtd: {quantity}</Text>
+      </View>
+    </View>
+  )
+}
