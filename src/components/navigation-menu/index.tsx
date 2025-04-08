@@ -1,16 +1,22 @@
 import type { IconProps } from '@tabler/icons-react-native'
+import { type Href, useRouter } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import { colors } from '@/styles/theme'
 import { s } from './styles'
 
 type NavigationMenuProps = {
-  data: {
-    icon: React.ComponentType<IconProps>
-    label: string
-  }[]
+  data: NavigationMenuData
 }
 
+export type NavigationMenuData = {
+  icon: React.ComponentType<IconProps>
+  label: string
+  href: Href
+}[]
+
 export function NavigationMenu({ data }: NavigationMenuProps) {
+  const navigate = useRouter()
+
   return (
     <View style={s.container}>
       <Text style={s.title}>Menu:</Text>
@@ -25,7 +31,10 @@ export function NavigationMenu({ data }: NavigationMenuProps) {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={s.buttonWrapper}>
-            <TouchableOpacity style={s.button}>
+            <TouchableOpacity
+              style={s.button}
+              onPress={() => navigate.navigate(item.href)}
+            >
               <item.icon size={20} color={colors.zinc[50]} />
             </TouchableOpacity>
             <Text style={s.label}>{item.label}</Text>

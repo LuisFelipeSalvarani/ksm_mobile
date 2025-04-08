@@ -1,12 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { router, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
+
 import { Loading } from '@/components/loading'
 import { Login } from '@/components/login'
+
 import { useCheckAuthentication } from '@/http/endpoints/authentication/authentication'
 import { useAuthStore } from '@/store/auth-store'
-import { getHeaders } from '@/utils/get-headers'
+import { getHeaders } from '@/utils/utils'
 
 export default function Index() {
   const [headers, setHeaders] = useState<HeadersInit>()

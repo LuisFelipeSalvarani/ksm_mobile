@@ -1,8 +1,8 @@
 import { IconPackage } from '@tabler/icons-react-native'
-import dayjs from 'dayjs'
 import { Text, View } from 'react-native'
+
 import { colors } from '@/styles/theme'
-import { getCurrency } from '@/utils/currency-formater'
+import { getCurrency, getDate } from '@/utils/utils'
 import { s } from './styles'
 
 type LastSalesItemProps = {
@@ -31,7 +31,7 @@ export function LastSalesItem({
         <Text numberOfLines={1} style={s.company}>
           {companyName}
         </Text>
-        <Text style={s.date}>Data: {dayjs(date).format('DD/MM/YYYY')}</Text>
+        <Text style={s.date}>Data: {getDate(date)}</Text>
       </View>
 
       <View style={s.counts}>

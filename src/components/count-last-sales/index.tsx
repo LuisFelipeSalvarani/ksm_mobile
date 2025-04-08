@@ -2,23 +2,15 @@ import { useEffect, useState } from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import type { ChartData } from 'react-native-chart-kit/dist/HelperTypes'
+
 import { useGetSalesByDaysOfTheLastWeek } from '@/http/endpoints/sales/sales'
-import { colors } from '@/styles/theme'
-import { getHeaders } from '@/utils/get-headers'
+import { getHeaders } from '@/utils/utils'
+
 import { Loading } from '../loading'
 import { s } from './styles'
 
-// const data = {
-//   labels: ['Qua', 'Qui', 'Sex', 'Seg', 'Ter', 'Qua', 'Qui'],
-//   datasets: [
-//     {
-//       data: [5, 15, 2, 5, 6, 10, 12],
-//     },
-//   ],
-// }
-
 export function CountLastSales() {
-  const screenWidth = Dimensions.get('window').width
+  const { width } = Dimensions.get('window')
   const [headers, setHeaders] = useState<HeadersInit>()
   const [data, setData] = useState<ChartData>()
 
@@ -77,7 +69,7 @@ export function CountLastSales() {
         <BarChart
           data={data}
           height={200}
-          width={screenWidth * 0.8}
+          width={width * 0.8}
           yAxisLabel=""
           yAxisSuffix=""
           fromZero

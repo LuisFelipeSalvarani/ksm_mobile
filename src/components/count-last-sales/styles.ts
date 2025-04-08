@@ -3,8 +3,10 @@ import { colors, fontFamily } from '@/styles/theme'
 
 export const s = StyleSheet.create({
   container: {
+    paddingBottom: 16,
     paddingHorizontal: 16,
     gap: 4,
+    elevation: 1,
   },
   title: {
     fontSize: 12,

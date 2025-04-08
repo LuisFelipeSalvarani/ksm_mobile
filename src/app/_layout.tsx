@@ -6,13 +6,10 @@ import {
   useFonts,
 } from '@expo-google-fonts/poppins'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { router, Stack } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { Stack } from 'expo-router'
 import { Loading } from '@/components/loading'
-import { useCheckAuthentication } from '@/http/endpoints/authentication/authentication'
 import { queryClient } from '@/lib/query-client'
 import { colors } from '@/styles/theme'
-import { getHeaders } from '@/utils/get-headers'
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
