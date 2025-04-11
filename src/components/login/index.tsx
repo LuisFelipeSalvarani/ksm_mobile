@@ -9,10 +9,13 @@ import {
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
+
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
+
 import { useLogin } from '@/http/endpoints/authentication/authentication'
 import { useAuthStore } from '@/store/auth-store'
+
 import { s } from './styles'
 
 export function Login() {

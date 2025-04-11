@@ -2,6 +2,7 @@
 import { useMutation } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryClient,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
@@ -13,63 +14,64 @@ import type {
   CreateUserBody,
 } from '../../models'
 
+import { customInstance } from '../../mutator/custom-instance'
+import type { ErrorType, BodyType } from '../../mutator/custom-instance'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Register a user
  */
-export const getCreateUserUrl = () => {
-  return `http://192.168.1.167:3333/users`
-}
-
-export const createUser = async (
-  createUserBody: CreateUserBody,
-  options?: RequestInit
-): Promise<CreateUser201> => {
-  const res = await fetch(getCreateUserUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createUserBody),
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: CreateUser201 = body ? JSON.parse(body) : {}
-
-  return data
+export const createUser = (
+  createUserBody: BodyType<CreateUserBody>,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<CreateUser201>(
+    {
+      url: `/users`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createUserBody,
+      signal,
+    },
+    options
+  )
 }
 
 export const getCreateUserMutationOptions = <
-  TError = CreateUser400 | CreateUser404,
+  TError = ErrorType<CreateUser400 | CreateUser404>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof createUser>>,
     TError,
-    { data: CreateUserBody },
+    { data: BodyType<CreateUserBody> },
     TContext
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createUser>>,
   TError,
-  { data: CreateUserBody },
+  { data: BodyType<CreateUserBody> },
   TContext
 > => {
   const mutationKey = ['createUser']
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined }
+    : { mutation: { mutationKey }, request: undefined }
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createUser>>,
-    { data: CreateUserBody }
+    { data: BodyType<CreateUserBody> }
   > = props => {
     const { data } = props ?? {}
 
-    return createUser(data, fetchOptions)
+    return createUser(data, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -78,30 +80,33 @@ export const getCreateUserMutationOptions = <
 export type CreateUserMutationResult = NonNullable<
   Awaited<ReturnType<typeof createUser>>
 >
-export type CreateUserMutationBody = CreateUserBody
-export type CreateUserMutationError = CreateUser400 | CreateUser404
+export type CreateUserMutationBody = BodyType<CreateUserBody>
+export type CreateUserMutationError = ErrorType<CreateUser400 | CreateUser404>
 
 /**
  * @summary Register a user
  */
 export const useCreateUser = <
-  TError = CreateUser400 | CreateUser404,
+  TError = ErrorType<CreateUser400 | CreateUser404>,
   TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createUser>>,
-    TError,
-    { data: CreateUserBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createUser>>,
+      TError,
+      { data: BodyType<CreateUserBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
   Awaited<ReturnType<typeof createUser>>,
   TError,
-  { data: CreateUserBody },
+  { data: BodyType<CreateUserBody> },
   TContext
 > => {
   const mutationOptions = getCreateUserMutationOptions(options)
 
-  return useMutation(mutationOptions)
+  return useMutation(mutationOptions, queryClient)
 }

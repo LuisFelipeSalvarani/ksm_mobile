@@ -5,6 +5,7 @@ import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
   MutationFunction,
+  QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
@@ -22,121 +23,117 @@ import type {
   LoginBody,
 } from '../../models'
 
+import { customInstance } from '../../mutator/custom-instance'
+import type { ErrorType, BodyType } from '../../mutator/custom-instance'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Login
  */
-export const getLoginUrl = () => {
-  return `http://192.168.1.167:3333/auth/login`
-}
-
-export const login = async (
-  loginBody: LoginBody,
-  options?: RequestInit
-): Promise<Login200> => {
-  const res = await fetch(getLoginUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(loginBody),
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: Login200 = body ? JSON.parse(body) : {}
-
-  return data
+export const login = (
+  loginBody: BodyType<LoginBody>,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<Login200>(
+    {
+      url: `/auth/login`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: loginBody,
+      signal,
+    },
+    options
+  )
 }
 
 export const getLoginMutationOptions = <
-  TError = Login404,
+  TError = ErrorType<Login404>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof login>>,
     TError,
-    { data: LoginBody },
+    { data: BodyType<LoginBody> },
     TContext
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof login>>,
   TError,
-  { data: LoginBody },
+  { data: BodyType<LoginBody> },
   TContext
 > => {
   const mutationKey = ['login']
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined }
+    : { mutation: { mutationKey }, request: undefined }
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof login>>,
-    { data: LoginBody }
+    { data: BodyType<LoginBody> }
   > = props => {
     const { data } = props ?? {}
 
-    return login(data, fetchOptions)
+    return login(data, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
 }
 
 export type LoginMutationResult = NonNullable<Awaited<ReturnType<typeof login>>>
-export type LoginMutationBody = LoginBody
-export type LoginMutationError = Login404
+export type LoginMutationBody = BodyType<LoginBody>
+export type LoginMutationError = ErrorType<Login404>
 
 /**
  * @summary Login
  */
-export const useLogin = <TError = Login404, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof login>>,
-    TError,
-    { data: LoginBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
+export const useLogin = <TError = ErrorType<Login404>, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof login>>,
+      TError,
+      { data: BodyType<LoginBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
   Awaited<ReturnType<typeof login>>,
   TError,
-  { data: LoginBody },
+  { data: BodyType<LoginBody> },
   TContext
 > => {
   const mutationOptions = getLoginMutationOptions(options)
 
-  return useMutation(mutationOptions)
+  return useMutation(mutationOptions, queryClient)
 }
 /**
  * @summary Check user authentication
  */
-export const getCheckAuthenticationUrl = () => {
-  return `http://192.168.1.167:3333/auth/check`
-}
-
-export const checkAuthentication = async (
-  options?: RequestInit
-): Promise<CheckAuthentication204> => {
-  const res = await fetch(getCheckAuthenticationUrl(), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: CheckAuthentication204 = body ? JSON.parse(body) : {}
-
-  return data
+export const checkAuthentication = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<CheckAuthentication204>(
+    { url: `/auth/check`, method: 'GET', signal },
+    options
+  )
 }
 
 export const getCheckAuthenticationQueryKey = () => {
-  return [`http://192.168.1.167:3333/auth/check`] as const
+  return [`/auth/check`] as const
 }
 
 export const getCheckAuthenticationQueryOptions = <
   TData = Awaited<ReturnType<typeof checkAuthentication>>,
-  TError = CheckAuthentication401,
+  TError = ErrorType<CheckAuthentication401>,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -145,15 +142,15 @@ export const getCheckAuthenticationQueryOptions = <
       TData
     >
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getCheckAuthenticationQueryKey()
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof checkAuthentication>>
-  > = ({ signal }) => checkAuthentication({ signal, ...fetchOptions })
+  > = ({ signal }) => checkAuthentication(requestOptions, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof checkAuthentication>>,
@@ -165,67 +162,76 @@ export const getCheckAuthenticationQueryOptions = <
 export type CheckAuthenticationQueryResult = NonNullable<
   Awaited<ReturnType<typeof checkAuthentication>>
 >
-export type CheckAuthenticationQueryError = CheckAuthentication401
+export type CheckAuthenticationQueryError = ErrorType<CheckAuthentication401>
 
 export function useCheckAuthentication<
   TData = Awaited<ReturnType<typeof checkAuthentication>>,
-  TError = CheckAuthentication401,
->(options: {
-  query: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof checkAuthentication>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      DefinedInitialDataOptions<
+  TError = ErrorType<CheckAuthentication401>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof checkAuthentication>>,
         TError,
-        Awaited<ReturnType<typeof checkAuthentication>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof checkAuthentication>>,
+          TError,
+          Awaited<ReturnType<typeof checkAuthentication>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useCheckAuthentication<
   TData = Awaited<ReturnType<typeof checkAuthentication>>,
-  TError = CheckAuthentication401,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof checkAuthentication>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
+  TError = ErrorType<CheckAuthentication401>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof checkAuthentication>>,
         TError,
-        Awaited<ReturnType<typeof checkAuthentication>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof checkAuthentication>>,
+          TError,
+          Awaited<ReturnType<typeof checkAuthentication>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useCheckAuthentication<
   TData = Awaited<ReturnType<typeof checkAuthentication>>,
-  TError = CheckAuthentication401,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof checkAuthentication>>,
-      TError,
-      TData
+  TError = ErrorType<CheckAuthentication401>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkAuthentication>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 /**
@@ -234,24 +240,28 @@ export function useCheckAuthentication<
 
 export function useCheckAuthentication<
   TData = Awaited<ReturnType<typeof checkAuthentication>>,
-  TError = CheckAuthentication401,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof checkAuthentication>>,
-      TError,
-      TData
+  TError = ErrorType<CheckAuthentication401>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof checkAuthentication>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getCheckAuthenticationQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>
-  }
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
   query.queryKey = queryOptions.queryKey
 

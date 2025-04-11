@@ -2,6 +2,7 @@
 import { useMutation } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryClient,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
@@ -12,63 +13,64 @@ import type {
   CreateCompanyBody,
 } from '../../models'
 
+import { customInstance } from '../../mutator/custom-instance'
+import type { ErrorType, BodyType } from '../../mutator/custom-instance'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Register a company
  */
-export const getCreateCompanyUrl = () => {
-  return `http://192.168.1.167:3333/companies`
-}
-
-export const createCompany = async (
-  createCompanyBody: CreateCompanyBody,
-  options?: RequestInit
-): Promise<CreateCompany201> => {
-  const res = await fetch(getCreateCompanyUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createCompanyBody),
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: CreateCompany201 = body ? JSON.parse(body) : {}
-
-  return data
+export const createCompany = (
+  createCompanyBody: BodyType<CreateCompanyBody>,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<CreateCompany201>(
+    {
+      url: `/companies`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCompanyBody,
+      signal,
+    },
+    options
+  )
 }
 
 export const getCreateCompanyMutationOptions = <
-  TError = CreateCompany400,
+  TError = ErrorType<CreateCompany400>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof createCompany>>,
     TError,
-    { data: CreateCompanyBody },
+    { data: BodyType<CreateCompanyBody> },
     TContext
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createCompany>>,
   TError,
-  { data: CreateCompanyBody },
+  { data: BodyType<CreateCompanyBody> },
   TContext
 > => {
   const mutationKey = ['createCompany']
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined }
+    : { mutation: { mutationKey }, request: undefined }
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createCompany>>,
-    { data: CreateCompanyBody }
+    { data: BodyType<CreateCompanyBody> }
   > = props => {
     const { data } = props ?? {}
 
-    return createCompany(data, fetchOptions)
+    return createCompany(data, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -77,30 +79,33 @@ export const getCreateCompanyMutationOptions = <
 export type CreateCompanyMutationResult = NonNullable<
   Awaited<ReturnType<typeof createCompany>>
 >
-export type CreateCompanyMutationBody = CreateCompanyBody
-export type CreateCompanyMutationError = CreateCompany400
+export type CreateCompanyMutationBody = BodyType<CreateCompanyBody>
+export type CreateCompanyMutationError = ErrorType<CreateCompany400>
 
 /**
  * @summary Register a company
  */
 export const useCreateCompany = <
-  TError = CreateCompany400,
+  TError = ErrorType<CreateCompany400>,
   TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createCompany>>,
-    TError,
-    { data: CreateCompanyBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createCompany>>,
+      TError,
+      { data: BodyType<CreateCompanyBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
   Awaited<ReturnType<typeof createCompany>>,
   TError,
-  { data: CreateCompanyBody },
+  { data: BodyType<CreateCompanyBody> },
   TContext
 > => {
   const mutationOptions = getCreateCompanyMutationOptions(options)
 
-  return useMutation(mutationOptions)
+  return useMutation(mutationOptions, queryClient)
 }

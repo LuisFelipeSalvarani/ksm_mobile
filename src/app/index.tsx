@@ -1,22 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { RawAxiosRequestHeaders } from 'axios'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
-
 import { Loading } from '@/components/loading'
 import { Login } from '@/components/login'
-
 import { useCheckAuthentication } from '@/http/endpoints/authentication/authentication'
 import { useAuthStore } from '@/store/auth-store'
 import { getHeaders } from '@/utils/utils'
 
 export default function Index() {
-  const [headers, setHeaders] = useState<HeadersInit>()
+  const [headers, setHeaders] = useState<RawAxiosRequestHeaders>()
   const setUserData = useAuthStore(state => state.setUserData)
   const navigate = useRouter()
 
-  const { data, isSuccess, isLoading } = useCheckAuthentication({
-    fetch: {
+  const { isSuccess, isLoading } = useCheckAuthentication({
+    request: {
       headers,
     },
     query: {
@@ -60,11 +59,11 @@ export default function Index() {
   }
 
   useEffect(() => {
-    if (isSuccess && data) {
+    if (isSuccess) {
       setUserGlobalState()
       navigate.replace('/home')
     }
-  }, [isSuccess, data])
+  }, [isSuccess])
 
   useEffect(() => {
     onGetAuthorization()

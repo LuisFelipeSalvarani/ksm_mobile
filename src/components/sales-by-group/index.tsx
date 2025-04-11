@@ -1,29 +1,37 @@
+import type { RawAxiosRequestHeaders } from 'axios'
 import { useEffect, useState } from 'react'
 import { Dimensions, Text, View } from 'react-native'
-import { ProgressChart } from 'react-native-chart-kit'
-import type { ProgressChartData } from 'react-native-chart-kit/dist/ProgressChart'
+import { Pie, PolarChart } from 'victory-native'
 
 import { useGetSalesByProductGroup } from '@/http/endpoints/sales/sales'
+import { colors } from '@/styles/theme'
 import { getDecimal, getHeaders } from '@/utils/utils'
 import { Loading } from '../loading'
 import { Caption, type CaptionData } from './caption'
 import { s } from './styles'
 
-const colors = [
-  '#FF9DA7',
-  '#AF7AA1',
-  '#EDC949',
-  '#59A14F',
-  '#76B7B2',
-  '#E15759',
-  '#F28E2B',
+const colorsChart = [
   '#4E79A7',
+  '#F28E2B',
+  '#E15759',
+  '#76B7B2',
+  '#59A14F',
+  '#EDC949',
+  '#AF7AA1',
+  '#FF9DA7',
 ]
 
 export function SalesByGroup() {
   const { width } = Dimensions.get('window')
-  const [headers, setHeaders] = useState<HeadersInit>()
-  const [data, setData] = useState<ProgressChartData>()
+  const [headers, setHeaders] = useState<RawAxiosRequestHeaders>()
+  const [data, setData] =
+    useState<
+      {
+        label: string
+        value: number
+        color: string
+      }[]
+    >()
   const [captionData, setCaptionData] = useState<CaptionData[]>()
 
   const {
@@ -31,7 +39,7 @@ export function SalesByGroup() {
     isLoading,
     isSuccess,
   } = useGetSalesByProductGroup({
-    fetch: {
+    request: {
       headers,
     },
     query: {
@@ -44,7 +52,9 @@ export function SalesByGroup() {
     const authorization = await getHeaders()
 
     if (authorization) {
-      setHeaders({ authorization })
+      setHeaders({
+        Authorization: authorization,
+      })
     }
   }
 
@@ -58,7 +68,7 @@ export function SalesByGroup() {
           ),
           quantity: sale.totalGroupSales,
           count: sale.totalValueGroupSales,
-          color: colors[sales.sales.groupedSales.length - index - 1],
+          color: colorsChart[index],
         } as CaptionData
       })
 
@@ -68,22 +78,14 @@ export function SalesByGroup() {
 
   const mapData = async () => {
     if (sales && sales !== 'null') {
-      const labels = sales?.sales.groupedSales
-        .map(sale => sale.groupDescription)
-        .reverse()
-      const data = sales?.sales.groupedSales
-        .map(sale => sale.totalGroupSales / sales.sales.total)
-        .reverse()
+      const data = sales.sales.groupedSales.map((sale, i) => ({
+        label: sale.groupDescription,
+        value: sale.totalGroupSales,
+        color: colorsChart[i],
+      }))
+      setData(data)
 
-      if (labels?.length && data?.length) {
-        setData({
-          labels,
-          data,
-          colors,
-        })
-
-        await mapCaptionData()
-      }
+      await mapCaptionData()
     }
   }
 
@@ -102,24 +104,37 @@ export function SalesByGroup() {
       <Text style={s.title}>Vendas por grupo de produtos:</Text>
 
       <View style={s.chartWrapper}>
-        <ProgressChart
-          data={data}
-          width={width * 0.8}
-          height={300}
-          strokeWidth={12}
-          radius={36}
-          chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          }}
-          hideLegend
-          withCustomBarColorFromData
-        />
+        <View style={{ width: width * 0.9, height: 280 }}>
+          <PolarChart
+            data={data}
+            labelKey={'label'}
+            valueKey={'value'}
+            colorKey={'color'}
+          >
+            <Pie.Chart innerRadius={'60%'}>
+              {({ slice }) => (
+                <>
+                  <Pie.Slice
+                    animate={{
+                      type: 'spring',
+                    }}
+                  />
+                  <Pie.SliceAngularInset
+                    animate={{
+                      type: 'spring',
+                    }}
+                    angularInset={{
+                      angularStrokeColor: colors.white,
+                      angularStrokeWidth: 5,
+                    }}
+                  />
+                </>
+              )}
+            </Pie.Chart>
+          </PolarChart>
+        </View>
+        <Text style={s.caption}>Total: {getDecimal(sales.sales.total)}</Text>
       </View>
-
-      <Text style={s.caption}>Total: {getDecimal(sales.sales.total)}</Text>
 
       {captionData ? <Caption data={captionData} /> : <Loading />}
     </View>

@@ -1,4 +1,3 @@
-import { colors, fontFamily } from '@/styles/theme'
 import type { IconProps } from '@tabler/icons-react-native'
 import {
   TextInput,
@@ -8,6 +7,7 @@ import {
   View,
   type ViewProps,
 } from 'react-native'
+import { colors } from '@/styles/theme'
 
 import { s } from './styles'
 

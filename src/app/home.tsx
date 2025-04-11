@@ -29,7 +29,7 @@ const menu: NavigationMenuData = [
   {
     icon: IconPackages,
     label: 'Produtos',
-    href: '/',
+    href: '/products/general',
   },
   {
     icon: IconCalculator,

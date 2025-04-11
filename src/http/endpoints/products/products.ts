@@ -4,6 +4,7 @@ import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
@@ -17,71 +18,55 @@ import type {
   GetAllProductGroups200,
   GetAllProductParams,
   GetProductById200,
-  GetProductById400,
+  GetProductById404,
   GetTopSellingProducts200,
   GetTopSellingProducts204,
+  GetTotalDistinctProductsSoldByDayOfTheLastWeekRoute200,
+  GetTotalDistinctProductsSoldByDayOfTheLastWeekRoute204,
 } from '../../models'
+
+import { customInstance } from '../../mutator/custom-instance'
+import type { ErrorType } from '../../mutator/custom-instance'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
  * @summary Get all products
  */
-export const getGetAllProductUrl = (params?: GetAllProductParams) => {
-  const normalizedParams = new URLSearchParams()
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  })
-
-  const stringifiedParams = normalizedParams.toString()
-
-  return stringifiedParams.length > 0
-    ? `http://192.168.1.167:3333/products?${stringifiedParams}`
-    : `http://192.168.1.167:3333/products`
-}
-
-export const getAllProduct = async (
+export const getAllProduct = (
   params?: GetAllProductParams,
-  options?: RequestInit
-): Promise<GetAllProduct200 | GetAllProduct204> => {
-  const res = await fetch(getGetAllProductUrl(params), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetAllProduct200 | GetAllProduct204 = body ? JSON.parse(body) : {}
-
-  return data
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<GetAllProduct200 | GetAllProduct204>(
+    { url: `/products`, method: 'GET', params, signal },
+    options
+  )
 }
 
 export const getGetAllProductQueryKey = (params?: GetAllProductParams) => {
-  return [
-    `http://192.168.1.167:3333/products`,
-    ...(params ? [params] : []),
-  ] as const
+  return [`/products`, ...(params ? [params] : [])] as const
 }
 
 export const getGetAllProductQueryOptions = <
   TData = Awaited<ReturnType<typeof getAllProduct>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(
   params?: GetAllProductParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAllProduct>>, TError, TData>
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customInstance>
   }
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getGetAllProductQueryKey(params)
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllProduct>>> = ({
     signal,
-  }) => getAllProduct(params, { signal, ...fetchOptions })
+  }) => getAllProduct(params, requestOptions, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getAllProduct>>,
@@ -93,11 +78,11 @@ export const getGetAllProductQueryOptions = <
 export type GetAllProductQueryResult = NonNullable<
   Awaited<ReturnType<typeof getAllProduct>>
 >
-export type GetAllProductQueryError = unknown
+export type GetAllProductQueryError = ErrorType<unknown>
 
 export function useGetAllProduct<
   TData = Awaited<ReturnType<typeof getAllProduct>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(
   params: undefined | GetAllProductParams,
   options: {
@@ -112,14 +97,15 @@ export function useGetAllProduct<
         >,
         'initialData'
       >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetAllProduct<
   TData = Awaited<ReturnType<typeof getAllProduct>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(
   params?: GetAllProductParams,
   options?: {
@@ -134,22 +120,24 @@ export function useGetAllProduct<
         >,
         'initialData'
       >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetAllProduct<
   TData = Awaited<ReturnType<typeof getAllProduct>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(
   params?: GetAllProductParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAllProduct>>, TError, TData>
     >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
@@ -159,23 +147,25 @@ export function useGetAllProduct<
 
 export function useGetAllProduct<
   TData = Awaited<ReturnType<typeof getAllProduct>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(
   params?: GetAllProductParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAllProduct>>, TError, TData>
     >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetAllProductQueryOptions(params, options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>
-  }
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
   query.queryKey = queryOptions.queryKey
 
@@ -185,31 +175,23 @@ export function useGetAllProduct<
 /**
  * @summary Get all product groups
  */
-export const getGetAllProductGroupsUrl = () => {
-  return `http://192.168.1.167:3333/products/groups`
-}
-
-export const getAllProductGroups = async (
-  options?: RequestInit
-): Promise<GetAllProductGroups200> => {
-  const res = await fetch(getGetAllProductGroupsUrl(), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetAllProductGroups200 = body ? JSON.parse(body) : {}
-
-  return data
+export const getAllProductGroups = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<GetAllProductGroups200>(
+    { url: `/products/groups`, method: 'GET', signal },
+    options
+  )
 }
 
 export const getGetAllProductGroupsQueryKey = () => {
-  return [`http://192.168.1.167:3333/products/groups`] as const
+  return [`/products/groups`] as const
 }
 
 export const getGetAllProductGroupsQueryOptions = <
   TData = Awaited<ReturnType<typeof getAllProductGroups>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -218,15 +200,15 @@ export const getGetAllProductGroupsQueryOptions = <
       TData
     >
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getGetAllProductGroupsQueryKey()
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getAllProductGroups>>
-  > = ({ signal }) => getAllProductGroups({ signal, ...fetchOptions })
+  > = ({ signal }) => getAllProductGroups(requestOptions, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getAllProductGroups>>,
@@ -238,67 +220,76 @@ export const getGetAllProductGroupsQueryOptions = <
 export type GetAllProductGroupsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getAllProductGroups>>
 >
-export type GetAllProductGroupsQueryError = unknown
+export type GetAllProductGroupsQueryError = ErrorType<unknown>
 
 export function useGetAllProductGroups<
   TData = Awaited<ReturnType<typeof getAllProductGroups>>,
-  TError = unknown,
->(options: {
-  query: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getAllProductGroups>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      DefinedInitialDataOptions<
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof getAllProductGroups>>,
         TError,
-        Awaited<ReturnType<typeof getAllProductGroups>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAllProductGroups>>,
+          TError,
+          Awaited<ReturnType<typeof getAllProductGroups>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetAllProductGroups<
   TData = Awaited<ReturnType<typeof getAllProductGroups>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getAllProductGroups>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof getAllProductGroups>>,
         TError,
-        Awaited<ReturnType<typeof getAllProductGroups>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAllProductGroups>>,
+          TError,
+          Awaited<ReturnType<typeof getAllProductGroups>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetAllProductGroups<
   TData = Awaited<ReturnType<typeof getAllProductGroups>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getAllProductGroups>>,
-      TError,
-      TData
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getAllProductGroups>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 /**
@@ -307,24 +298,28 @@ export function useGetAllProductGroups<
 
 export function useGetAllProductGroups<
   TData = Awaited<ReturnType<typeof getAllProductGroups>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getAllProductGroups>>,
-      TError,
-      TData
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getAllProductGroups>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetAllProductGroupsQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>
-  }
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
   query.queryKey = queryOptions.queryKey
 
@@ -334,48 +329,40 @@ export function useGetAllProductGroups<
 /**
  * @summary Get product by id
  */
-export const getGetProductByIdUrl = (id: string) => {
-  return `http://192.168.1.167:3333/products/${id}`
-}
-
-export const getProductById = async (
+export const getProductById = (
   id: string,
-  options?: RequestInit
-): Promise<GetProductById200> => {
-  const res = await fetch(getGetProductByIdUrl(id), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetProductById200 = body ? JSON.parse(body) : {}
-
-  return data
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<GetProductById200>(
+    { url: `/products/${id}`, method: 'GET', signal },
+    options
+  )
 }
 
 export const getGetProductByIdQueryKey = (id: string) => {
-  return [`http://192.168.1.167:3333/products/${id}`] as const
+  return [`/products/${id}`] as const
 }
 
 export const getGetProductByIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getProductById>>,
-  TError = GetProductById400,
+  TError = ErrorType<GetProductById404>,
 >(
   id: string,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData>
     >
-    fetch?: RequestInit
+    request?: SecondParameter<typeof customInstance>
   }
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getGetProductByIdQueryKey(id)
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductById>>> = ({
     signal,
-  }) => getProductById(id, { signal, ...fetchOptions })
+  }) => getProductById(id, requestOptions, signal)
 
   return {
     queryKey,
@@ -392,11 +379,11 @@ export const getGetProductByIdQueryOptions = <
 export type GetProductByIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getProductById>>
 >
-export type GetProductByIdQueryError = GetProductById400
+export type GetProductByIdQueryError = ErrorType<GetProductById404>
 
 export function useGetProductById<
   TData = Awaited<ReturnType<typeof getProductById>>,
-  TError = GetProductById400,
+  TError = ErrorType<GetProductById404>,
 >(
   id: string,
   options: {
@@ -411,14 +398,15 @@ export function useGetProductById<
         >,
         'initialData'
       >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetProductById<
   TData = Awaited<ReturnType<typeof getProductById>>,
-  TError = GetProductById400,
+  TError = ErrorType<GetProductById404>,
 >(
   id: string,
   options?: {
@@ -433,22 +421,24 @@ export function useGetProductById<
         >,
         'initialData'
       >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetProductById<
   TData = Awaited<ReturnType<typeof getProductById>>,
-  TError = GetProductById400,
+  TError = ErrorType<GetProductById404>,
 >(
   id: string,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData>
     >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
@@ -458,23 +448,25 @@ export function useGetProductById<
 
 export function useGetProductById<
   TData = Awaited<ReturnType<typeof getProductById>>,
-  TError = GetProductById400,
+  TError = ErrorType<GetProductById404>,
 >(
   id: string,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData>
     >
-    fetch?: RequestInit
-  }
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetProductByIdQueryOptions(id, options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>
-  }
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
   query.queryKey = queryOptions.queryKey
 
@@ -484,33 +476,23 @@ export function useGetProductById<
 /**
  * @summary Get top 10 selling products
  */
-export const getGetTopSellingProductsUrl = () => {
-  return `http://192.168.1.167:3333/products/top/selling`
-}
-
-export const getTopSellingProducts = async (
-  options?: RequestInit
-): Promise<GetTopSellingProducts200 | GetTopSellingProducts204> => {
-  const res = await fetch(getGetTopSellingProductsUrl(), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetTopSellingProducts200 | GetTopSellingProducts204 = body
-    ? JSON.parse(body)
-    : {}
-
-  return data
+export const getTopSellingProducts = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<GetTopSellingProducts200 | GetTopSellingProducts204>(
+    { url: `/products/top/selling`, method: 'GET', signal },
+    options
+  )
 }
 
 export const getGetTopSellingProductsQueryKey = () => {
-  return [`http://192.168.1.167:3333/products/top/selling`] as const
+  return [`/products/top/selling`] as const
 }
 
 export const getGetTopSellingProductsQueryOptions = <
   TData = Awaited<ReturnType<typeof getTopSellingProducts>>,
-  TError = unknown,
+  TError = ErrorType<unknown>,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -519,15 +501,15 @@ export const getGetTopSellingProductsQueryOptions = <
       TData
     >
   >
-  fetch?: RequestInit
+  request?: SecondParameter<typeof customInstance>
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey = queryOptions?.queryKey ?? getGetTopSellingProductsQueryKey()
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getTopSellingProducts>>
-  > = ({ signal }) => getTopSellingProducts({ signal, ...fetchOptions })
+  > = ({ signal }) => getTopSellingProducts(requestOptions, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getTopSellingProducts>>,
@@ -539,67 +521,76 @@ export const getGetTopSellingProductsQueryOptions = <
 export type GetTopSellingProductsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTopSellingProducts>>
 >
-export type GetTopSellingProductsQueryError = unknown
+export type GetTopSellingProductsQueryError = ErrorType<unknown>
 
 export function useGetTopSellingProducts<
   TData = Awaited<ReturnType<typeof getTopSellingProducts>>,
-  TError = unknown,
->(options: {
-  query: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getTopSellingProducts>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      DefinedInitialDataOptions<
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof getTopSellingProducts>>,
         TError,
-        Awaited<ReturnType<typeof getTopSellingProducts>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTopSellingProducts>>,
+          TError,
+          Awaited<ReturnType<typeof getTopSellingProducts>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetTopSellingProducts<
   TData = Awaited<ReturnType<typeof getTopSellingProducts>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getTopSellingProducts>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
         Awaited<ReturnType<typeof getTopSellingProducts>>,
         TError,
-        Awaited<ReturnType<typeof getTopSellingProducts>>
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTopSellingProducts>>,
+          TError,
+          Awaited<ReturnType<typeof getTopSellingProducts>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 export function useGetTopSellingProducts<
   TData = Awaited<ReturnType<typeof getTopSellingProducts>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getTopSellingProducts>>,
-      TError,
-      TData
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopSellingProducts>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
 /**
@@ -608,24 +599,235 @@ export function useGetTopSellingProducts<
 
 export function useGetTopSellingProducts<
   TData = Awaited<ReturnType<typeof getTopSellingProducts>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getTopSellingProducts>>,
-      TError,
-      TData
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopSellingProducts>>,
+        TError,
+        TData
+      >
     >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & {
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getGetTopSellingProductsQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary Get the count of distinct products by day of the last 7 days
+ */
+export const getTotalDistinctProductsSoldByDayOfTheLastWeekRoute = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<
+    | GetTotalDistinctProductsSoldByDayOfTheLastWeekRoute200
+    | GetTotalDistinctProductsSoldByDayOfTheLastWeekRoute204
+  >({ url: `/products/count/last/week`, method: 'GET', signal }, options)
+}
+
+export const getGetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryKey =
+  () => {
+    return [`/products/count/last/week`] as const
   }
+
+export const getGetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryOptions =
+  <
+    TData = Awaited<
+      ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+    >,
+    TError = ErrorType<unknown>,
+  >(options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+        >,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {}
+
+    const queryKey =
+      queryOptions?.queryKey ??
+      getGetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryKey()
+
+    const queryFn: QueryFunction<
+      Awaited<
+        ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+      >
+    > = ({ signal }) =>
+      getTotalDistinctProductsSoldByDayOfTheLastWeekRoute(
+        requestOptions,
+        signal
+      )
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+      Awaited<
+        ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+      >,
+      TError,
+      TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> }
+  }
+
+export type GetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+    >
+  >
+export type GetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryError =
+  ErrorType<unknown>
+
+export function useGetTotalDistinctProductsSoldByDayOfTheLastWeekRoute<
+  TData = Awaited<
+    ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+  >,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<
+            ReturnType<
+              typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute
+            >
+          >,
+          TError,
+          Awaited<
+            ReturnType<
+              typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute
+            >
+          >
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetTotalDistinctProductsSoldByDayOfTheLastWeekRoute<
+  TData = Awaited<
+    ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+  >,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<
+            ReturnType<
+              typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute
+            >
+          >,
+          TError,
+          Awaited<
+            ReturnType<
+              typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute
+            >
+          >
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useGetTotalDistinctProductsSoldByDayOfTheLastWeekRoute<
+  TData = Awaited<
+    ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+  >,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+        >,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary Get the count of distinct products by day of the last 7 days
+ */
+
+export function useGetTotalDistinctProductsSoldByDayOfTheLastWeekRoute<
+  TData = Awaited<
+    ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+  >,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getTotalDistinctProductsSoldByDayOfTheLastWeekRoute>
+        >,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions =
+    getGetTotalDistinctProductsSoldByDayOfTheLastWeekRouteQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
   query.queryKey = queryOptions.queryKey
 

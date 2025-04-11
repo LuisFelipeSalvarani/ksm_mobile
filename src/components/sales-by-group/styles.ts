@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { colors, fontFamily } from '@/styles/theme'
+import { fontFamily } from '@/styles/theme'
 
 export const s = StyleSheet.create({
   container: {
@@ -14,11 +14,12 @@ export const s = StyleSheet.create({
   chartWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   caption: {
-    fontSize: 12,
+    fontSize: 20,
     fontFamily: fontFamily.semiBold,
     paddingRight: 16,
-    textAlign: 'right',
+    position: 'absolute',
   },
 })

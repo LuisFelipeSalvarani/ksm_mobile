@@ -9,7 +9,9 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.{ts,tsx}"]
+      "includes": [
+        "**/*.{ts,tsx}"
+      ]
     }
   ],
   "formatter": {
@@ -59,6 +61,9 @@
     }
   },
   "files": {
-    "includes": ["**", "!**/node_modules"]
+    "includes": [
+      "**",
+      "!**/node_modules"
+    ]
   }
 }

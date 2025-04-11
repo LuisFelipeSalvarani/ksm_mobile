@@ -10,26 +10,20 @@ export default defineConfig({
         },
         header: () => `// biome-ignore-all lint:
         `,
+        mutator: {
+          path: './src/http/mutator/custom-instance.ts',
+          name: 'customInstance',
+        },
       },
       mode: 'tags-split',
       target: './src/http/endpoints',
       schemas: './src/http/models',
       indexFiles: true,
       client: 'react-query',
-      httpClient: 'fetch',
+      httpClient: 'axios',
       headers: true,
       clean: true,
       biome: true,
-      baseUrl: 'http://192.168.1.167:3333',
     },
   },
-  // apiZod: {
-  //   input: './openapi.json',
-  //   output: {
-  //     mode: 'tags-split',
-  //     client: 'zod',
-  //     target: './src/http/endpoints',
-  //     fileExtension: '.zod.ts',
-  //   },
-  // },
 })

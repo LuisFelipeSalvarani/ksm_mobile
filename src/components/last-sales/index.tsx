@@ -1,16 +1,19 @@
+import type { RawAxiosRequestHeaders } from 'axios'
 import { useEffect, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 
 import { useGetLastTenSales } from '@/http/endpoints/sales/sales'
 import type { GetLastTenSales200LastSalesItem } from '@/http/models'
+
 import { getHeaders } from '@/utils/utils'
 
 import { Loading } from '../loading'
 import { LastSalesItem } from './last-sales-item'
+
 import { s } from './styles'
 
 export function LastSales() {
-  const [headers, setHeaders] = useState<HeadersInit>()
+  const [headers, setHeaders] = useState<RawAxiosRequestHeaders>()
   const [data, setData] = useState<GetLastTenSales200LastSalesItem[]>([])
 
   const {
@@ -18,7 +21,7 @@ export function LastSales() {
     isLoading,
     isSuccess,
   } = useGetLastTenSales({
-    fetch: {
+    request: {
       headers,
     },
     query: {
