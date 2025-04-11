@@ -1,20 +1,35 @@
 import { IconChevronLeft } from '@tabler/icons-react-native'
-import { useRouter } from 'expo-router'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { type Href, useRouter } from 'expo-router'
+import {
+  type GestureResponderEvent,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
-import { colors } from '@/styles/theme'
+import { colors } from '@/constants/theme'
 import { s } from './styles'
 
 type HeaderProps = {
   title: string
+  onBack?: Href | ((event: GestureResponderEvent) => void) | undefined
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, onBack }: HeaderProps) {
   const navigate = useRouter()
 
   return (
     <View style={s.container}>
-      <TouchableOpacity style={s.back} onPress={() => navigate.back()}>
+      <TouchableOpacity
+        style={s.back}
+        onPress={
+          onBack
+            ? typeof onBack === 'function'
+              ? onBack
+              : () => navigate.replace(onBack)
+            : () => navigate.back()
+        }
+      >
         <IconChevronLeft size={24} color={colors.blue[600]} />
       </TouchableOpacity>
 

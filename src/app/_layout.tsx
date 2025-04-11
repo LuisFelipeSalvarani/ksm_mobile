@@ -8,8 +8,8 @@ import {
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { Loading } from '@/components/loading'
+import { colors } from '@/constants/theme'
 import { queryClient } from '@/lib/query-client'
-import { colors } from '@/styles/theme'
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({

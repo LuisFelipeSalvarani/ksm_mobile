@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native'
-import { fontFamily } from '@/styles/theme'
+import { fontFamily } from '@/constants/theme'
 
 const { width } = Dimensions.get('window')
 

@@ -14,7 +14,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import { colors } from '@/styles/theme'
+import { colors } from '@/constants/theme'
 import { s } from './styles'
 
 type GroupButtonContextType<T> = {

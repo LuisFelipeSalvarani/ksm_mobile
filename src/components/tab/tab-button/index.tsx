@@ -2,7 +2,7 @@ import type { TabTriggerSlotProps } from 'expo-router/ui'
 import { forwardRef, type Ref } from 'react'
 import { Pressable, Text, type View } from 'react-native'
 
-import { colors } from '@/styles/theme'
+import { colors } from '@/constants/theme'
 import { s } from './styles'
 
 type TabButtonProps = TabTriggerSlotProps & {}

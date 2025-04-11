@@ -1,13 +1,26 @@
-import { View } from 'react-native'
-import { CountLastSales } from '@/components/count-last-sales'
-import { LastSales } from '@/components/last-sales'
+import { Loading } from '@/components/loading'
+import { useCountLastSalesContainer } from '@/hooks/use-count-last-sales-container'
+import { useLastSalesContainer } from '@/hooks/use-last-sales-container'
+import { UseSalesGeneralScreen } from '@/screens/sales/use-sales-general-screen'
 
 export default function General() {
-  return (
-    <View style={{ flex: 1 }}>
-      <CountLastSales />
+  const { data: countLastSales, isLoading: isLoadingCountLastSales } =
+    useCountLastSalesContainer()
+  const { data: lastSales, isLoading: isLoadingLastSales } =
+    useLastSalesContainer()
 
-      <LastSales />
-    </View>
+  if (
+    isLoadingCountLastSales ||
+    !countLastSales ||
+    isLoadingLastSales ||
+    !lastSales
+  )
+    return <Loading />
+
+  return (
+    <UseSalesGeneralScreen
+      countLastSales={countLastSales}
+      lastSales={lastSales}
+    />
   )
 }

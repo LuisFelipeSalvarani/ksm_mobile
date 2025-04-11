@@ -1,3 +1,4 @@
+import type { IconProps } from '@tabler/icons-react-native'
 import {
   Text,
   type TextProps,
@@ -6,9 +7,7 @@ import {
   View,
   type ViewProps,
 } from 'react-native'
-
-import { colors } from '@/styles/theme'
-import type { IconProps } from '@tabler/icons-react-native'
+import { colors } from '@/constants/theme'
 import { s } from './styles'
 
 type ButtonProps = TouchableOpacityProps & {}

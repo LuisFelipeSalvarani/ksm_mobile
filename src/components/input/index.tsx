@@ -7,7 +7,7 @@ import {
   View,
   type ViewProps,
 } from 'react-native'
-import { colors } from '@/styles/theme'
+import { colors } from '@/constants/theme'
 
 import { s } from './styles'
 

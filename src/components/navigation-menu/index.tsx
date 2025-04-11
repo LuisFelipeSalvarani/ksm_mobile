@@ -1,7 +1,7 @@
 import type { IconProps } from '@tabler/icons-react-native'
 import { type Href, useRouter } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
-import { colors } from '@/styles/theme'
+import { colors } from '@/constants/theme'
 import { s } from './styles'
 
 type NavigationMenuProps = {
