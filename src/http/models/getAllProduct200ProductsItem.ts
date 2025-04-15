@@ -3,5 +3,4 @@
 export type GetAllProduct200ProductsItem = {
   id: string
   description: string
-  unitValue: number
 }

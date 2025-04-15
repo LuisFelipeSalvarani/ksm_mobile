@@ -28,7 +28,7 @@ export function UseLoginScreen({ onSubmit }: UseLoginScreenProps) {
     <View style={s.container}>
       <Text>KSM</Text>
 
-      <View style={s.inputWrapper}>
+      <View style={s.loginWrapper}>
         <View>
           <Text style={s.title}>Login</Text>
           <Text style={s.subtitle}>Entre com suas credenciais</Text>

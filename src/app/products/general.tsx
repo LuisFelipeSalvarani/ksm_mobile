@@ -1,10 +1,11 @@
 import { Loading } from '@/components/loading'
 import { useProductsGeneralContainer } from '@/hooks/use-products-general-container'
+import { useTopProductsSellingContainer } from '@/hooks/use-top-products-selling-container'
 import { UseProductsGeneralScreen } from '@/screens/products/general/use-products-general-screen'
 
 export default function General() {
   const {
-    isLoading,
+    isLoading: isLoadingProductsGeneral,
     countData,
     distinctData,
     comparativeData,
@@ -12,11 +13,16 @@ export default function General() {
     minValue,
   } = useProductsGeneralContainer()
 
+  const { data: topSelling, isLoading: isLoadingTopProductsSelling } =
+    useTopProductsSellingContainer()
+
   if (
-    isLoading ||
+    isLoadingProductsGeneral ||
+    isLoadingTopProductsSelling ||
     !countData.length ||
     !distinctData.length ||
-    !comparativeData.length
+    !comparativeData.length ||
+    !topSelling?.length
   )
     return <Loading />
 
@@ -27,6 +33,7 @@ export default function General() {
       comparativeData={comparativeData}
       maxValue={maxValue}
       minValue={minValue}
+      topSelling={topSelling}
     />
   )
 }

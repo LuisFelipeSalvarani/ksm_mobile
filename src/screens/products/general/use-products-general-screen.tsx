@@ -3,9 +3,12 @@ import { DashPathEffect, useFont } from '@shopify/react-native-skia'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { BarGroup, CartesianChart } from 'victory-native'
+
 import { GroupButton } from '@/components/group-button'
 import { colors } from '@/constants/theme'
+import type { TopProductsSellingData } from '@/hooks/use-top-products-selling-container'
 import { s } from './styles'
+import { UseTopProductsSelling } from './top-products-selling/use-top-products-selling'
 
 type UseProductsGeneralScreenProps = {
   countData: ChartData[]
@@ -13,6 +16,7 @@ type UseProductsGeneralScreenProps = {
   comparativeData: ChartData[]
   minValue: number
   maxValue: number
+  topSelling: TopProductsSellingData
 }
 
 type ChartData = {
@@ -27,6 +31,7 @@ const UseProductsGeneralScreen = ({
   comparativeData,
   maxValue,
   minValue,
+  topSelling,
 }: UseProductsGeneralScreenProps) => {
   const [option, setOption] = useState<'count' | 'distinct' | 'comparative'>(
     'count'
@@ -109,6 +114,8 @@ const UseProductsGeneralScreen = ({
           </GroupButton>
         </View>
       </View>
+
+      <UseTopProductsSelling topSelling={topSelling} />
     </View>
   )
 }

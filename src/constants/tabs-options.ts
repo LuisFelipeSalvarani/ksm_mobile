@@ -19,6 +19,11 @@ const productsTabs: TabsData[] = [
     href: '/products/general',
     label: 'Geral',
   },
+  {
+    name: 'list',
+    href: '/products/list',
+    label: 'Produtos',
+  },
 ]
 
 export { salesTabs, productsTabs }

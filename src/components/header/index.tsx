@@ -26,8 +26,8 @@ export function Header({ title, onBack }: HeaderProps) {
           onBack
             ? typeof onBack === 'function'
               ? onBack
-              : () => navigate.replace(onBack)
-            : () => navigate.back()
+              : () => navigate.dismissTo(onBack)
+            : () => navigate.dismissTo('/')
         }
       >
         <IconChevronLeft size={24} color={colors.blue[600]} />
