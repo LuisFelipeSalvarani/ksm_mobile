@@ -27,16 +27,11 @@ const homeMenu: NavigationMenuData = [
   {
     icon: IconCalculator,
     label: 'Calculadora',
-    href: '/',
+    href: '/calculator',
   },
   {
     icon: IconClipboardList,
     label: 'Tarefas',
-    href: '/',
-  },
-  {
-    icon: IconTrendingUp,
-    label: 'Previsões',
     href: '/',
   },
 ]

@@ -54,7 +54,7 @@ const useProductsListContainer = () => {
   }
 
   const mappingGroupsData = async () => {
-    if (data && data !== 'null') {
+    if (groups) {
       const mappedGroups = groups?.groups.map(group => ({
         key: group.id,
         value: group.description,

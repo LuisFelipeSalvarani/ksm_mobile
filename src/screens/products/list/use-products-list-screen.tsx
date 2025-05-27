@@ -92,10 +92,7 @@ const UseProductsListScreen = ({
         refreshing={false}
         onEndReached={infiniteScroll}
         renderItem={({ item }) => (
-          <UseProductsItem
-            description={item.description}
-            href={'/products/list'}
-          />
+          <UseProductsItem description={item.description} id={item.id} />
         )}
         ListFooterComponent={() =>
           isFetching && (
