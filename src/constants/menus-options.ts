@@ -32,7 +32,7 @@ const homeMenu: NavigationMenuData = [
   {
     icon: IconClipboardList,
     label: 'Tarefas',
-    href: '/',
+    href: '/tasks',
   },
 ]
 
