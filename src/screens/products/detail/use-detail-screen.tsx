@@ -1,117 +1,65 @@
-/** biome-ignore-all lint/correctness/useHookAtTopLevel: <explanation> */
-
-import { Poppins_500Medium } from '@expo-google-fonts/poppins'
-import { DashPathEffect, useFont } from '@shopify/react-native-skia'
-import type { RawAxiosRequestHeaders } from 'axios'
-import { useEffect, useMemo, useState } from 'react'
-import { Dimensions, FlatList, SafeAreaView, Text, View } from 'react-native'
-import Svg from 'react-native-svg'
-import { Bar, CartesianChart, Line } from 'victory-native'
-import { Loading } from '@/components/loading'
+import { IconAlertSquareRounded } from '@tabler/icons-react-native'
+import { router } from 'expo-router'
+import { SafeAreaView, Text, View } from 'react-native'
+import { Header } from '@/components/header'
 import { colors } from '@/constants/theme'
-import { useGetProductById } from '@/http/endpoints/products/products'
-import { getHeaders } from '@/utils/utils'
+import { UsePriceVariation } from './price-variation/use-price-variation'
 import { s } from './styles'
+import { UseTopBuyers } from './top-buyers/use-top-buyers'
 
-interface Buyer {
-  customer: string
-  totalPurchases: number
-  quantityPurchases: number
+export interface Buyer {
+  name: string
+  total: string
+  quantity: string | undefined
+}
+
+interface Infos {
+  id: string | undefined
+  description: string | undefined
+  group: string | undefined
 }
 
 interface UseDetailScreenProps {
-  id: string
+  productInfos: Infos
+  priceData:
+    | {
+        x: string
+        y: number
+      }[]
+    | undefined
+  mainBuyers: Buyer[] | undefined
 }
 
-function UseDetailsScreen({ id }: UseDetailScreenProps) {
-  const [headers, setHeaders] = useState<RawAxiosRequestHeaders>()
-  const font = useFont(Poppins_500Medium)
-
-  const { data, isLoading, isError } = useGetProductById(id, {
-    request: { headers },
-    query: { enabled: !!headers && !!id },
-  })
-
-  const fetchAuthorizationHeader = async () => {
-    const authorization = await getHeaders()
-
-    if (authorization) {
-      setHeaders({
-        Authorization: authorization,
-      })
-    }
-  }
-
-  useEffect(() => {
-    fetchAuthorizationHeader()
-  }, [])
-
-  const priceData = useMemo(
-    () => data?.product.priceVariation.map(p => ({ x: p.month, y: p.average })),
-    [data?.product]
-  )
-
-  if (isLoading) {
-    return <Loading />
-  }
-
-  if (isError || !priceData || !data) {
-    return (
-      <View style={s.center}>
-        <Text style={s.errorText}>Erro ao carregar produto.</Text>
-      </View>
-    )
-  }
-
+function UseDetailsScreen({
+  productInfos,
+  priceData,
+  mainBuyers,
+}: UseDetailScreenProps) {
   return (
     <SafeAreaView style={s.container}>
-      <Text style={s.title}>{data.product.description}</Text>
-      <Text style={s.subtitle}>{data.product.groupDescription}</Text>
+      <Header title="Detalhes do produto" onBack={() => router.back()} />
 
-      <Text style={s.sectionTitle}>Variação de Preço</Text>
-      <View style={s.card}>
-        <View style={s.chart}>
-          <CartesianChart
-            data={priceData}
-            xKey="x"
-            yKeys={['y']}
-            domainPadding={32}
-            xAxis={{ font }}
-            yAxis={[
-              {
-                font,
-                lineColor: colors.zinc[500],
-                linePathEffect: <DashPathEffect intervals={[8, 6]} />,
-              },
-            ]}
-          >
-            {({ points }) => (
-              <>
-                <Line
-                  points={points.y}
-                  curveType="natural"
-                  color={colors.blue[600]}
-                  strokeWidth={3}
-                />
-              </>
-            )}
-          </CartesianChart>
-        </View>
+      <View style={s.productInfos}>
+        <Text style={s.title}>{productInfos.description}</Text>
+        <Text style={s.subtitle}>{productInfos.group}</Text>
       </View>
 
-      <Text style={s.sectionTitle}>Principais Compradores</Text>
-      <FlatList
-        data={data.product.mainBuyers}
-        keyExtractor={item => item.customer}
-        ListHeaderComponent={<Text style={s.sectionTitle}>Detalhes</Text>}
-        renderItem={({ item }: { item: Buyer }) => (
-          <View style={s.buyerRow}>
-            <Text style={s.buyerText}>{item.customer}</Text>
-            <Text style={s.buyerText}>R$ {item.totalPurchases.toFixed(2)}</Text>
-            <Text style={s.buyerText}>{item.quantityPurchases}x</Text>
-          </View>
-        )}
-      />
+      {!priceData?.length && !mainBuyers?.length ? (
+        <View style={s.errorWrapper}>
+          <IconAlertSquareRounded color={colors.zinc[700]} size={32} />
+          <Text style={s.error}>Nenhum dado encontrado</Text>
+        </View>
+      ) : (
+        <>
+          <UsePriceVariation priceData={priceData} />
+
+          {mainBuyers ? (
+            <UseTopBuyers topBuyers={mainBuyers} />
+          ) : (
+            <Text>Erro ao carregar dados</Text>
+          )}
+        </>
+      )}
     </SafeAreaView>
   )
 }

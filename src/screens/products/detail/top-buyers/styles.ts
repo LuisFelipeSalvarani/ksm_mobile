@@ -3,22 +3,17 @@ import { colors, fontFamily } from '@/constants/theme'
 
 export const s = StyleSheet.create({
   container: {
+    padding: 8,
     flex: 1,
-    backgroundColor: colors.white,
-  },
-  productInfos: {
-    paddingHorizontal: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 12,
     fontFamily: fontFamily.semiBold,
-    marginBottom: 4,
+    paddingLeft: 8,
   },
-  subtitle: {
-    fontSize: 16,
-    fontFamily: fontFamily.medium,
-    color: colors.zinc[500],
-    marginBottom: 16,
+  list: {
+    padding: 8,
+    gap: 16,
   },
   errorWrapper: {
     alignItems: 'center',
