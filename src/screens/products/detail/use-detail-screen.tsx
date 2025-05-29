@@ -56,7 +56,10 @@ function UseDetailsScreen({
           {mainBuyers ? (
             <UseTopBuyers topBuyers={mainBuyers} />
           ) : (
-            <Text>Erro ao carregar dados</Text>
+            <View style={s.errorWrapper}>
+              <IconAlertSquareRounded color={colors.zinc[700]} size={32} />
+              <Text style={s.error}>Nenhum dado encontrado</Text>
+            </View>
           )}
         </>
       )}

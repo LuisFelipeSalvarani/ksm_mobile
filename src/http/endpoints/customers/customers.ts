@@ -18,8 +18,8 @@ import type {
   GetAllCustomers200,
   GetAllCustomers204,
   GetAllCustomersParams,
-  GetTopBuyersProduct200,
-  GetTopBuyersProduct204,
+  GetCustomerById200,
+  GetCustomerById404,
 } from '../../models'
 
 import { customInstance } from '../../mutator/custom-instance'
@@ -344,32 +344,32 @@ export function useGetAllCustomerGroups<
 }
 
 /**
- * @summary Get top 10 buyers of a product
+ * @summary Get customer by id
  */
-export const getTopBuyersProduct = (
-  id: string,
+export const getCustomerById = (
+  id: number,
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal
 ) => {
-  return customInstance<GetTopBuyersProduct200 | GetTopBuyersProduct204>(
-    { url: `/customers/top/${id}`, method: 'GET', signal },
+  return customInstance<GetCustomerById200>(
+    { url: `/customers/${id}`, method: 'GET', signal },
     options
   )
 }
 
-export const getGetTopBuyersProductQueryKey = (id: string) => {
-  return [`/customers/top/${id}`] as const
+export const getGetCustomerByIdQueryKey = (id: number) => {
+  return [`/customers/${id}`] as const
 }
 
-export const getGetTopBuyersProductQueryOptions = <
-  TData = Awaited<ReturnType<typeof getTopBuyersProduct>>,
-  TError = ErrorType<unknown>,
+export const getGetCustomerByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCustomerById>>,
+  TError = ErrorType<GetCustomerById404>,
 >(
-  id: string,
+  id: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof getTopBuyersProduct>>,
+        Awaited<ReturnType<typeof getCustomerById>>,
         TError,
         TData
       >
@@ -379,11 +379,11 @@ export const getGetTopBuyersProductQueryOptions = <
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetTopBuyersProductQueryKey(id)
+  const queryKey = queryOptions?.queryKey ?? getGetCustomerByIdQueryKey(id)
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getTopBuyersProduct>>
-  > = ({ signal }) => getTopBuyersProduct(id, requestOptions, signal)
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerById>>> = ({
+    signal,
+  }) => getCustomerById(id, requestOptions, signal)
 
   return {
     queryKey,
@@ -391,35 +391,35 @@ export const getGetTopBuyersProductQueryOptions = <
     enabled: !!id,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof getTopBuyersProduct>>,
+    Awaited<ReturnType<typeof getCustomerById>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetTopBuyersProductQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getTopBuyersProduct>>
+export type GetCustomerByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCustomerById>>
 >
-export type GetTopBuyersProductQueryError = ErrorType<unknown>
+export type GetCustomerByIdQueryError = ErrorType<GetCustomerById404>
 
-export function useGetTopBuyersProduct<
-  TData = Awaited<ReturnType<typeof getTopBuyersProduct>>,
-  TError = ErrorType<unknown>,
+export function useGetCustomerById<
+  TData = Awaited<ReturnType<typeof getCustomerById>>,
+  TError = ErrorType<GetCustomerById404>,
 >(
-  id: string,
+  id: number,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof getTopBuyersProduct>>,
+        Awaited<ReturnType<typeof getCustomerById>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getTopBuyersProduct>>,
+          Awaited<ReturnType<typeof getCustomerById>>,
           TError,
-          Awaited<ReturnType<typeof getTopBuyersProduct>>
+          Awaited<ReturnType<typeof getCustomerById>>
         >,
         'initialData'
       >
@@ -429,24 +429,24 @@ export function useGetTopBuyersProduct<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
-export function useGetTopBuyersProduct<
-  TData = Awaited<ReturnType<typeof getTopBuyersProduct>>,
-  TError = ErrorType<unknown>,
+export function useGetCustomerById<
+  TData = Awaited<ReturnType<typeof getCustomerById>>,
+  TError = ErrorType<GetCustomerById404>,
 >(
-  id: string,
+  id: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof getTopBuyersProduct>>,
+        Awaited<ReturnType<typeof getCustomerById>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getTopBuyersProduct>>,
+          Awaited<ReturnType<typeof getCustomerById>>,
           TError,
-          Awaited<ReturnType<typeof getTopBuyersProduct>>
+          Awaited<ReturnType<typeof getCustomerById>>
         >,
         'initialData'
       >
@@ -456,15 +456,15 @@ export function useGetTopBuyersProduct<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 }
-export function useGetTopBuyersProduct<
-  TData = Awaited<ReturnType<typeof getTopBuyersProduct>>,
-  TError = ErrorType<unknown>,
+export function useGetCustomerById<
+  TData = Awaited<ReturnType<typeof getCustomerById>>,
+  TError = ErrorType<GetCustomerById404>,
 >(
-  id: string,
+  id: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof getTopBuyersProduct>>,
+        Awaited<ReturnType<typeof getCustomerById>>,
         TError,
         TData
       >
@@ -476,18 +476,18 @@ export function useGetTopBuyersProduct<
   queryKey: DataTag<QueryKey, TData, TError>
 }
 /**
- * @summary Get top 10 buyers of a product
+ * @summary Get customer by id
  */
 
-export function useGetTopBuyersProduct<
-  TData = Awaited<ReturnType<typeof getTopBuyersProduct>>,
-  TError = ErrorType<unknown>,
+export function useGetCustomerById<
+  TData = Awaited<ReturnType<typeof getCustomerById>>,
+  TError = ErrorType<GetCustomerById404>,
 >(
-  id: string,
+  id: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof getTopBuyersProduct>>,
+        Awaited<ReturnType<typeof getCustomerById>>,
         TError,
         TData
       >
@@ -498,7 +498,7 @@ export function useGetTopBuyersProduct<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
-  const queryOptions = getGetTopBuyersProductQueryOptions(id, options)
+  const queryOptions = getGetCustomerByIdQueryOptions(id, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

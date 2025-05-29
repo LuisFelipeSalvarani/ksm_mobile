@@ -3,4 +3,5 @@
 export type GetAllCustomersParams = {
   groupId?: number
   page?: number
+  search?: string
 }
