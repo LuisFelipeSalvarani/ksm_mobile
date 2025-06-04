@@ -7,6 +7,7 @@ import { s } from './styles'
 
 type UseLastSalesProps = {
 <<<<<<< HEAD
+<<<<<<< HEAD
   topBuyers: GetCustomerById200LastSalesItem[]
 }
 
@@ -20,6 +21,8 @@ const UseLastSales = ({ topBuyers }: UseLastSalesProps) => {
           data={topBuyers}
           keyExtractor={item => item.productid}
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   lastSales: {
     productId: string
     productDescription: string
@@ -38,6 +41,9 @@ const UseLastSales = ({ lastSales }: UseLastSalesProps) => {
         <FlatList
           data={lastSales}
           keyExtractor={item => item.productId}
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
           contentContainerStyle={s.list}
           renderItem={({ item }) => {
@@ -45,8 +51,14 @@ const UseLastSales = ({ lastSales }: UseLastSalesProps) => {
               <UseLastSalesItem
                 description={item.productDescription}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 total={item.total.toString()}
                 quantity={item.quantity.toString() || ''}
+=======
+                total={item.total}
+                quantity={item.quantity || ''}
+                date={item.date}
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
                 total={item.total}
                 quantity={item.quantity || ''}
@@ -67,7 +79,11 @@ const UseLastSales = ({ lastSales }: UseLastSalesProps) => {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type { UseLastSales }
+=======
+export { UseLastSales }
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
 export { UseLastSales }
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d

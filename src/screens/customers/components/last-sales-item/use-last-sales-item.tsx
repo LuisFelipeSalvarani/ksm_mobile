@@ -9,6 +9,10 @@ type UseLastSalesItemProps = {
   total: string
   quantity: string
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  date: string
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
   date: string
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
@@ -19,6 +23,10 @@ const UseLastSalesItem = ({
   total,
   quantity,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  date,
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
   date,
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
@@ -31,7 +39,12 @@ const UseLastSalesItem = ({
 
       <View style={s.infos}>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Text style={s.product}>{description}</Text>
+=======
+        <Text style={s.customer}>{description}</Text>
+        <Text style={s.date}>Data: {date}</Text>
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
         <Text style={s.customer}>{description}</Text>
         <Text style={s.date}>Data: {date}</Text>

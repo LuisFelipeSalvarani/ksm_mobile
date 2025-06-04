@@ -8,7 +8,11 @@ export default function Details() {
   const { id } = useLocalSearchParams<{ id: string }>()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const { customerInfos, lastSales, totalPurchasePerMonth, isLoading } =
+=======
+  const { customerInfos, lastSales, chartData, isLoading } =
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 =======
   const { customerInfos, lastSales, chartData, isLoading } =
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
@@ -21,14 +25,20 @@ export default function Details() {
   return (
     <UseCustomersDetilasScreen
 <<<<<<< HEAD
+<<<<<<< HEAD
       customerInfos={customerInfos}
       lastSales={lastSales}
       totalPurchasePerMonth={totalPurchasePerMonth}
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
       id={id}
       customerInfos={customerInfos}
       lastSales={lastSales}
       chartData={chartData}
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
     />
   )

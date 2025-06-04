@@ -2,6 +2,7 @@ import { Poppins_500Medium } from '@expo-google-fonts/poppins'
 import { DashPathEffect, useFont } from '@shopify/react-native-skia'
 import { IconAlertSquareRounded } from '@tabler/icons-react-native'
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Text, View } from 'react-native'
 import { CartesianChart, Line } from 'victory-native'
 import { colors } from '@/constants/theme'
@@ -19,6 +20,8 @@ interface UsePurchasePerMonthProps {
 
 function UsePurchasePerMonth({ purchaseData }: UsePurchasePerMonthProps) {
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { Bar, BarGroup, CartesianChart, Line } from 'victory-native'
@@ -46,12 +49,16 @@ interface UsePurchasePerMonthProps {
 
 function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
   const [option, setOption] = useState<'count' | 'quantity'>('count')
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   const font = useFont(Poppins_500Medium)
 
   return (
     <View style={s.container}>
       <View style={s.chartContainer}>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <Text style={s.title}>Variação de preço:</Text>
 
@@ -65,6 +72,8 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
                 domainPadding={32}
                 xAxis={{ font }}
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
         <Text style={s.title}>Compras dos últimos meses (6 meses):</Text>
 
         <View style={s.card}>
@@ -87,12 +96,16 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
                       ? chartData.totalPurchase.length
                       : chartData.totalQuantity.length,
                 }}
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
                 yAxis={[
                   {
                     font,
                     lineColor: colors.zinc[500],
                     linePathEffect: <DashPathEffect intervals={[8, 6]} />,
+<<<<<<< HEAD
 <<<<<<< HEAD
                   },
                 ]}
@@ -104,6 +117,8 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
                     color={colors.blue[600]}
                     strokeWidth={3}
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
                     formatYLabel: label => {
                       if (option === 'count') {
                         return getCurrency(label)
@@ -126,6 +141,9 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
                         ? chartData.totalPurchase?.length
                         : chartData.totalQuantity?.length
                     }
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
                   />
                 )}
@@ -139,7 +157,10 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
           )}
         </View>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 
         <View style={s.groupButton}>
           <GroupButton value={option} onChange={setOption}>
@@ -149,6 +170,9 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
             </GroupButton.Trigger>
           </GroupButton>
         </View>
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
       </View>
     </View>

@@ -1,17 +1,24 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Text, View } from 'react-native'
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 import { IconAlertSquareRounded } from '@tabler/icons-react-native'
 import { router } from 'expo-router'
 import { SafeAreaView, Text, View } from 'react-native'
 import { Header } from '@/components/header'
 import { colors } from '@/constants/theme'
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 import type {
   GetCustomerById200Customer,
   GetCustomerById200LastSalesItem,
   GetCustomerById200TotalPurchasePerMonthItem,
 } from '@/http/models'
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { UsePurchasePerMonth } from './purchase-per-month/use-purchase-per-month'
 
@@ -39,6 +46,8 @@ function UseCustomersDetilasScreen({
       <UsePurchasePerMonth purchaseData={totalPurchasePerMonth} />
     </View>
 =======
+=======
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 import { UseLastSales } from './last-sales/use-last-sales'
 import { UsePurchasePerMonth } from './purchase-per-month/use-purchase-per-month'
 import { s } from './styles'
@@ -109,6 +118,9 @@ function UseCustomersDetilasScreen({
         </View>
       )}
     </SafeAreaView>
+<<<<<<< HEAD
+>>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+=======
 >>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   )
 }
