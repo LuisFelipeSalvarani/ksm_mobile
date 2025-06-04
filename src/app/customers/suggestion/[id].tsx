@@ -2,13 +2,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Pressable, Text, View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { colors, fontFamily } from '@/constants/theme'
-import { useSuggesttionProductsForCustomer } from '@/hooks/use-suggestion-product-for-customer'
+import { useSuggestionProductsForCustomer } from '@/hooks/use-suggestion-product-for-customer'
 
 export default function Suggestion() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
 
-  const { data, isLoading } = useSuggesttionProductsForCustomer(Number(id))
+  const { data, isLoading } = useSuggestionProductsForCustomer(Number(id))
 
   return (
     <Pressable style={s.overlay} onPress={() => router.back()}>

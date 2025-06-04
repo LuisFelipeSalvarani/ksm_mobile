@@ -1,58 +1,14 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { Text, View } from 'react-native'
-=======
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
 import { IconAlertSquareRounded } from '@tabler/icons-react-native'
 import { router } from 'expo-router'
 import { SafeAreaView, Text, View } from 'react-native'
 import { Header } from '@/components/header'
 import { colors } from '@/constants/theme'
-<<<<<<< HEAD
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
-import type {
-  GetCustomerById200Customer,
-  GetCustomerById200LastSalesItem,
-  GetCustomerById200TotalPurchasePerMonthItem,
-} from '@/http/models'
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { UsePurchasePerMonth } from './purchase-per-month/use-purchase-per-month'
-
-interface UseCustomersDetilasScreenProps {
-  customerInfos: GetCustomerById200Customer
-  lastSales: GetCustomerById200LastSalesItem[] | undefined
-  totalPurchasePerMonth:
-    | {
-        x: string
-        y: number
-        z: number
-      }[]
-    | undefined
-}
-
-function UseCustomersDetilasScreen({
-  customerInfos,
-  lastSales,
-  totalPurchasePerMonth,
-}: UseCustomersDetilasScreenProps) {
-  return (
-    <View>
-      <Text>Teste</Text>
-
-      <UsePurchasePerMonth purchaseData={totalPurchasePerMonth} />
-    </View>
-=======
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
+import type { GetCustomerById200Customer } from '@/http/models'
 import { UseLastSales } from './last-sales/use-last-sales'
 import { UsePurchasePerMonth } from './purchase-per-month/use-purchase-per-month'
 import { s } from './styles'
 
-interface UseCustomersDetilasScreenProps {
+interface UseCustomersDetailsScreenProps {
   id: string
   customerInfos: GetCustomerById200Customer
   lastSales:
@@ -80,12 +36,12 @@ interface UseCustomersDetilasScreenProps {
   }
 }
 
-function UseCustomersDetilasScreen({
+function UseCustomersDetailsScreen({
   id,
   customerInfos,
   lastSales,
   chartData,
-}: UseCustomersDetilasScreenProps) {
+}: UseCustomersDetailsScreenProps) {
   return (
     <SafeAreaView style={s.container}>
       <Header
@@ -118,11 +74,7 @@ function UseCustomersDetilasScreen({
         </View>
       )}
     </SafeAreaView>
-<<<<<<< HEAD
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   )
 }
 
-export { UseCustomersDetilasScreen }
+export { UseCustomersDetailsScreen }

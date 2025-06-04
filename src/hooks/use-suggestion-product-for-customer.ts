@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { env } from '@/utils/env'
 import { getHeaders } from '@/utils/get-headers'
 
-type SeuggestionData = {
+type SuggestionData = {
   cliente_id: number
   sugestoes: {
     produto_id: string
@@ -13,7 +13,7 @@ type SeuggestionData = {
   }[]
 }
 
-function useSuggesttionProductsForCustomer(id: number) {
+function useSuggestionProductsForCustomer(id: number) {
   const { data, isLoading } = useQuery({
     queryKey: ['get-suggestion-product-for-customer', id],
     queryFn: async () => {
@@ -25,7 +25,7 @@ function useSuggesttionProductsForCustomer(id: number) {
         { headers: { Authorization: token } }
       )
 
-      return response.data as SeuggestionData
+      return response.data as SuggestionData
     },
     enabled: !!id,
     retry: 1,
@@ -34,4 +34,4 @@ function useSuggesttionProductsForCustomer(id: number) {
   return { data, isLoading }
 }
 
-export { useSuggesttionProductsForCustomer }
+export { useSuggestionProductsForCustomer }

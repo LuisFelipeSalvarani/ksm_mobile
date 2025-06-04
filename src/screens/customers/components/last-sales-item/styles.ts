@@ -30,33 +30,16 @@ export const s = StyleSheet.create({
   infos: {
     flex: 1,
   },
-<<<<<<< HEAD
-<<<<<<< HEAD
-  product: {
-=======
   customer: {
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
-=======
-  customer: {
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
     fontSize: 16,
     fontFamily: fontFamily.medium,
     lineHeight: 20,
   },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   date: {
     fontSize: 12,
     fontFamily: fontFamily.medium,
     lineHeight: 20,
   },
-<<<<<<< HEAD
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
-=======
->>>>>>> bf831e722e1565e744a745516e8df04611560e1d
   counts: {
     minWidth: 64,
   },
