@@ -7,6 +7,7 @@ import {
 } from '@expo-google-fonts/poppins'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Loading } from '@/components/loading'
 import { colors } from '@/constants/theme'
 import { queryClient } from '@/lib/query-client'
@@ -23,14 +24,26 @@ export default function Layout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: colors.white,
-          },
-        }}
-      />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: colors.white,
+            },
+          }}
+        >
+          <Stack.Screen
+            name="customers/suggestion/[id]"
+            options={{
+              presentation: 'transparentModal',
+              animation: 'fade',
+              headerShown: false,
+              contentStyle: { backgroundColor: 'transparent' },
+            }}
+          />
+        </Stack>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   )
 }

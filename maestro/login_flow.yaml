@@ -1,0 +1,16 @@
+appId: host.exp.exponent
+env:
+  EMAIL: "admin@kodiak.com"
+  SENHA: "Admin@33"
+
+---
+- launchApp
+- tapOn: "ksm"
+- assertVisible: "ksm"
+- assertVisible: "Login"
+- tapOn: "E-mail..."
+- inputText: "${EMAIL}"
+- tapOn: "Senha..."
+- inputText: "${SENHA}"
+- tapOn: "Entrar"
+- assertVisible: "Bem-vindo, Admin"

@@ -1,4 +1,7 @@
-import { IconChevronLeft } from '@tabler/icons-react-native'
+import {
+  IconChevronLeft,
+  IconMessage2Question,
+} from '@tabler/icons-react-native'
 import { type Href, useRouter } from 'expo-router'
 import {
   type GestureResponderEvent,
@@ -13,9 +16,10 @@ import { s } from './styles'
 type HeaderProps = {
   title: string
   onBack?: Href | ((event: GestureResponderEvent) => void) | undefined
+  onAction?: Href | ((event: GestureResponderEvent) => void)
 }
 
-export function Header({ title, onBack }: HeaderProps) {
+export function Header({ title, onBack, onAction }: HeaderProps) {
   const navigate = useRouter()
 
   return (
@@ -35,7 +39,20 @@ export function Header({ title, onBack }: HeaderProps) {
 
       <Text style={s.title}>{title}</Text>
 
-      <View style={s.space} />
+      {onAction ? (
+        <TouchableOpacity
+          style={s.back}
+          onPress={
+            typeof onAction === 'function'
+              ? onAction
+              : () => navigate.push(onAction)
+          }
+        >
+          <IconMessage2Question size={24} color={colors.blue[600]} />
+        </TouchableOpacity>
+      ) : (
+        <View style={s.space} />
+      )}
     </View>
   )
 }

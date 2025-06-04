@@ -3,7 +3,6 @@ import {
   IconClipboardList,
   IconPackages,
   IconShoppingCart,
-  IconTrendingUp,
   IconUsers,
 } from '@tabler/icons-react-native'
 import type { NavigationMenuData } from '@/components/navigation-menu'
@@ -17,7 +16,7 @@ const homeMenu: NavigationMenuData = [
   {
     icon: IconUsers,
     label: 'Clientes',
-    href: '/',
+    href: '/customers/list',
   },
   {
     icon: IconPackages,
