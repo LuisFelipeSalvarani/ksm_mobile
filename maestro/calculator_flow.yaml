@@ -1,0 +1,42 @@
+appId: host.exp.exponent
+---
+- tapOn:
+    id: "Calculadora"
+- assertVisible: "Calculadora de Margens"
+- tapOn:
+    id: "priceInput"
+- tapOn:
+    id: "8"
+- tapOn:
+    id: "5"
+- tapOn:
+    id: "costInput"
+- tapOn:
+    id: "5"
+- tapOn:
+    id: "5"
+- tapOn:
+    id: "="
+- assertVisible:
+    id: "result"
+- tapOn: "Lucro"
+- assertVisible: "Custo Total"
+- tapOn:
+    id: "priceInput"
+- tapOn:
+    id: "7"
+- tapOn:
+    id: "5"
+- tapOn:
+    id: "costInput"
+- tapOn:
+    id: "2"
+- tapOn:
+    id: "5"
+- tapOn:
+    id: "="
+- assertVisible:
+    id: "result"
+- tapOn:
+    id: "Back"
+- assertVisible: "Bem-vindo, Admin"

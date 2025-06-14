@@ -18,13 +18,7 @@ export default function List() {
     infiniteScroll,
   } = useCustomersListContainer()
 
-  if (
-    (isLoading && !allCustomers?.length) ||
-    !allCustomers?.length ||
-    isLoadingGroups ||
-    !allCustomersGroups?.length
-  )
-    return <Loading />
+  if (isLoading && isLoadingGroups) return <Loading />
 
   return (
     <UseCustomersListScreen

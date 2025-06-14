@@ -8,9 +8,11 @@ import {
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
 import { Loading } from '@/components/loading'
 import { colors } from '@/constants/theme'
 import { queryClient } from '@/lib/query-client'
+import { toastConfig } from '@/lib/toas-config'
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -43,6 +45,7 @@ export default function Layout() {
             }}
           />
         </Stack>
+        <Toast config={toastConfig} />
       </GestureHandlerRootView>
     </QueryClientProvider>
   )

@@ -118,6 +118,7 @@ const useCustomersListContainer = () => {
   useEffect(() => {
     if (isSuccess && data && page === 1) mappingData()
     else if (isSuccess && data && page > 1) setNextPageData()
+    else setAllCustomers([])
   }, [isSuccess, data, page])
 
   useEffect(() => {

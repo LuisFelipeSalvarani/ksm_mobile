@@ -10,16 +10,17 @@ import { Text, View } from 'react-native'
 
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
-
+import { Loading } from '@/components/loading'
+import { colors } from '@/constants/theme'
 import type { OnSubmitLoginType } from '@/hooks/use-login-container'
-
 import { s } from './styles'
 
 type UseLoginScreenProps = {
   onSubmit: ({ email, password }: OnSubmitLoginType) => void
+  isLoading: boolean
 }
 
-export function UseLoginScreen({ onSubmit }: UseLoginScreenProps) {
+export function UseLoginScreen({ onSubmit, isLoading }: UseLoginScreenProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -54,10 +55,19 @@ export function UseLoginScreen({ onSubmit }: UseLoginScreenProps) {
           </Input>
         </View>
 
-        <Button onPress={() => onSubmit({ email, password })}>
-          <Button.Text>Entrar</Button.Text>
+        <Button
+          onPress={() => onSubmit({ email, password })}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loading color={colors.zinc[100]} />
+          ) : (
+            <>
+              <Button.Text>Entrar</Button.Text>
 
-          <Button.Icon icon={IconChevronRight} />
+              <Button.Icon icon={IconChevronRight} />
+            </>
+          )}
         </Button>
       </View>
     </View>

@@ -22,6 +22,7 @@ export function Caption({ data }: CaptionProps) {
       <FlatList
         data={data}
         keyExtractor={item => item.title}
+        testID="Caption"
         ItemSeparatorComponent={() => <View style={s.separator} />}
         renderItem={({ item }) => {
           return (

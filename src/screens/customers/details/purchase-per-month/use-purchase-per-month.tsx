@@ -36,7 +36,8 @@ function UsePurchasePerMonth({ chartData }: UsePurchasePerMonthProps) {
         <Text style={s.title}>Compras dos últimos meses (6 meses):</Text>
 
         <View style={s.card}>
-          {chartData?.totalPurchase && chartData?.totalQuantity ? (
+          {chartData?.totalPurchase?.length &&
+          chartData?.totalQuantity?.length ? (
             <View style={s.chart}>
               <CartesianChart
                 data={

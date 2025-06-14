@@ -1,0 +1,32 @@
+appId: host.exp.exponent
+---
+- tapOn:
+    id: "Vendas"
+- assertVisible: "Total de vendas dos últimos 7 dias"
+- swipe:
+    from:
+      id: "lastSales"
+    direction: UP
+    duration: 3000
+- swipe:
+    from:
+      id: "lastSales"
+    direction: DOWN
+    duration: 3000
+- tapOn: "Grupos"
+- assertVisible: "Vendas por grupo de produtos:"
+- swipe:
+    from:
+      id: "Caption"
+    direction: UP
+    duration: 2000
+- swipe:
+    from:
+      id: "Caption"
+    direction: DOWN
+    duration: 2000
+- tapOn: "Geral"
+- assertVisible: "Total de vendas dos últimos 7 dias"
+- tapOn:
+    id: "Back"
+- assertVisible: "Bem-vindo, Admin"

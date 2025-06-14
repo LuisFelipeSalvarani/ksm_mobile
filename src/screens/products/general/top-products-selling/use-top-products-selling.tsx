@@ -15,6 +15,7 @@ const UseTopProductsSelling = ({ topSelling }: TopProductsSellingProps) => {
       <FlatList
         data={topSelling}
         keyExtractor={item => item.id}
+        testID="TopProductsSelling"
         contentContainerStyle={s.list}
         renderItem={({ item }) => {
           return (

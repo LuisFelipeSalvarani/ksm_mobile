@@ -114,6 +114,7 @@ const useProductsListContainer = () => {
   useEffect(() => {
     if (isSuccess && data && page === 1) mappingData()
     else if (isSuccess && data && page > 1) setNextPageData()
+    else setAllProducts([])
   }, [isSuccess, data, page])
 
   useEffect(() => {

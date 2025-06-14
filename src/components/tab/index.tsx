@@ -21,7 +21,12 @@ export function Tab({ tabs }: TabProps) {
       <TabList style={{ display: 'none' }}>
         {tabs.map(tab => {
           return (
-            <TabTrigger key={tab.name} name={tab.name} href={tab.href}>
+            <TabTrigger
+              key={tab.name}
+              testID={tab.name}
+              name={tab.name}
+              href={tab.href}
+            >
               <Text>{tab.label}</Text>
             </TabTrigger>
           )
@@ -35,7 +40,12 @@ export function Tab({ tabs }: TabProps) {
       >
         {tabs.map(tab => {
           return (
-            <TabTrigger key={tab.name} name={tab.name} asChild>
+            <TabTrigger
+              key={tab.name}
+              testID={tab.name}
+              name={tab.name}
+              asChild
+            >
               <TabButton>{tab.label}</TabButton>
             </TabTrigger>
           )

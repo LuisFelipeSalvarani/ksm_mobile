@@ -1,6 +1,8 @@
+import { IconAlertSquareRounded } from '@tabler/icons-react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Pressable, Text, View } from 'react-native'
 import { StyleSheet } from 'react-native'
+import { Loading } from '@/components/loading'
 import { colors, fontFamily } from '@/constants/theme'
 import { useSuggestionProductsForCustomer } from '@/hooks/use-suggestion-product-for-customer'
 
@@ -16,11 +18,22 @@ export default function Suggestion() {
         <Text style={s.title}>Sugestão de produtos para o cliente:</Text>
 
         <View style={s.suggestionContainer}>
-          {data?.sugestoes.map(suggestion => (
-            <View key={suggestion.produto_id} style={s.suggestionItem}>
-              <Text style={s.suggestionText}>{suggestion.nome}</Text>
+          {isLoading ? (
+            <View style={{ height: 100 }}>
+              <Loading />
             </View>
-          ))}
+          ) : data?.sugestoes.length ? (
+            data.sugestoes.map(suggestion => (
+              <View key={suggestion.produto_id} style={s.suggestionItem}>
+                <Text style={s.suggestionText}>{suggestion.nome}</Text>
+              </View>
+            ))
+          ) : (
+            <View style={s.errorWrapper}>
+              <IconAlertSquareRounded color={colors.zinc[700]} size={32} />
+              <Text style={s.error}>Não há sugestões para esse cliente</Text>
+            </View>
+          )}
         </View>
 
         <Pressable style={s.close} onPress={() => router.back()}>
@@ -79,5 +92,16 @@ const s = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     lineHeight: 20,
     color: colors.zinc[100],
+  },
+  errorWrapper: {
+    alignItems: 'center',
+    gap: 4,
+    padding: 16,
+  },
+  error: {
+    fontSize: 20,
+    fontFamily: fontFamily.semiBold,
+    lineHeight: 28,
+    color: colors.zinc[700],
   },
 })

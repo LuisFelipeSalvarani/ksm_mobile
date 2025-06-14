@@ -85,11 +85,16 @@ export function UseTasksScreen() {
             <Pressable
               onPress={() => handleComplete(item.id)}
               style={s.complete}
+              testID="conclusion"
             >
               <IconCheck size={24} color="#4CD964" />
             </Pressable>
           )}
-          <Pressable onPress={() => handleRemove(item.id)} style={s.delete}>
+          <Pressable
+            onPress={() => handleRemove(item.id)}
+            style={s.delete}
+            testID="delete"
+          >
             <IconTrash size={24} color="#FF3B30" />
           </Pressable>
         </View>
@@ -110,7 +115,7 @@ export function UseTasksScreen() {
           onSubmitEditing={handleAdd}
           returnKeyType="done"
         />
-        <Pressable onPress={handleAdd} style={s.addButton}>
+        <Pressable onPress={handleAdd} testID="addTask" style={s.addButton}>
           <IconPlus size={24} color={colors.zinc[50]} />
         </Pressable>
       </View>

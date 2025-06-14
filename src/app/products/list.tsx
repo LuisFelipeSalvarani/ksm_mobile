@@ -18,13 +18,7 @@ export default function ProductsList() {
     infiniteScroll,
   } = useProductsListContainer()
 
-  if (
-    (isLoading && !allProducts?.length) ||
-    !allProducts?.length ||
-    isLoadingGroups ||
-    !allProductsGroups?.length
-  )
-    return <Loading />
+  if (isLoading && isLoadingGroups) return <Loading />
 
   return (
     <UseProductsListScreen

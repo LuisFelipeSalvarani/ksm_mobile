@@ -1,8 +1,17 @@
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, type ColorValue } from 'react-native'
 
 import { colors } from '@/constants/theme'
 import { s } from './styles'
 
-export function Loading() {
-  return <ActivityIndicator color={colors.blue[800]} style={s.container} />
+interface LoadingProps {
+  color?: ColorValue
+}
+
+export function Loading({ color }: LoadingProps) {
+  return (
+    <ActivityIndicator
+      color={color ? color : colors.blue[800]}
+      style={s.container}
+    />
+  )
 }

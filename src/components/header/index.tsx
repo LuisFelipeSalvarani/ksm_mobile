@@ -26,6 +26,7 @@ export function Header({ title, onBack, onAction }: HeaderProps) {
     <View style={s.container}>
       <TouchableOpacity
         style={s.back}
+        testID="Back"
         onPress={
           onBack
             ? typeof onBack === 'function'
@@ -42,6 +43,7 @@ export function Header({ title, onBack, onAction }: HeaderProps) {
       {onAction ? (
         <TouchableOpacity
           style={s.back}
+          testID="Action"
           onPress={
             typeof onAction === 'function'
               ? onAction

@@ -12,8 +12,8 @@ import { UseProductsItem } from '../components/products-item/use-products-item'
 import { s } from './styles'
 
 type UseProductsListScreenProps = {
-  products: ProductsListData
-  groups: GroupsListData
+  products?: ProductsListData
+  groups?: GroupsListData
   setPage: React.Dispatch<React.SetStateAction<number>>
   search: string | undefined
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>
@@ -39,7 +39,7 @@ const UseProductsListScreen = ({
   return (
     <View style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>Produtos: </Text>
+        <Text style={s.title}>Produtos:</Text>
 
         <TouchableOpacity style={s.clear} onPress={clearFilterRequest}>
           <Text style={s.clearText}>Limpar</Text>
@@ -60,7 +60,7 @@ const UseProductsListScreen = ({
               label="Filtrar por grupo de produtos"
               enabled={false}
             />
-            {groups.map(group => {
+            {groups?.map(group => {
               return (
                 <Picker.Item
                   key={group.key}
@@ -87,6 +87,7 @@ const UseProductsListScreen = ({
       <FlatList
         data={products}
         keyExtractor={item => item.id}
+        testID="allProductsList"
         contentContainerStyle={s.list}
         onRefresh={() => setPage(1)}
         refreshing={false}
@@ -100,6 +101,9 @@ const UseProductsListScreen = ({
               <Loading />
             </View>
           )
+        }
+        ListEmptyComponent={
+          <Text style={s.empty}>Nenhum dado encontrado.</Text>
         }
       />
     </View>

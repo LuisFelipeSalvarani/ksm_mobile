@@ -1,0 +1,64 @@
+appId: host.exp.exponent
+env:
+  SEARCH: "CANECA - MODELO: 1MO1JA6"
+
+---
+- tapOn:
+    id: "Produtos"
+- assertVisible: "Total de produtos dos últimos 7 dias"
+- tapOn: "Distintos"
+- tapOn: "Comparativo"
+- swipe:
+    from:
+      id: "TopProductsSelling"
+    direction: DOWN
+    duration: 1000
+- swipe:
+    from:
+      id: "TopProductsSelling"
+    direction: UP
+    duration: 3000
+- swipe:
+    from:
+      id: "TopProductsSelling"
+    direction: DOWN
+    duration: 1000
+# - tapOn:
+#     childOf:
+#       id: "Picker"
+# - tapOn: "CLIENTE PROMO 20"
+# - tapOn: "Limpar"
+- tapOn:
+    id: "list"
+- assertVisible: "Produtos:"
+- swipe:
+    from:
+      id: "allProductsList"
+    direction: DOWN
+    duration: 1000
+- swipe:
+    from:
+      id: "allProductsList"
+    direction: UP
+    duration: 3000
+- swipe:
+    from:
+      id: "allProductsList"
+    direction: DOWN
+    duration: 1000
+- tapOn: "Pesquisar"
+- inputText: "Nao existe"
+- assertVisible: "Nenhum dado encontrado."
+- eraseText
+- tapOn: "Pesquisar"
+- inputText: "1MO1JA6"
+- assertVisible: "${SEARCH}"
+- hideKeyboard
+- tapOn: "${SEARCH}"
+- assertVisible: "Detalhes do produto"
+- tapOn:
+    id: "Back"
+- assertVisible: "Produtos:"
+- tapOn:
+    id: "Back"
+- tapOn: "Bem-vindo, Admin"

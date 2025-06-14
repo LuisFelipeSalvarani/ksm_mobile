@@ -11,7 +11,7 @@ export default function Groups() {
     <UseSalesByProductGroupScreen
       salesByProductGroup={data}
       captions={captions}
-      total={total}
+      total={Number(total)}
     />
   )
 }

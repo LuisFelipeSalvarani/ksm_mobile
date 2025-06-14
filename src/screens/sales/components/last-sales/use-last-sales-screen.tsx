@@ -15,6 +15,7 @@ const UseLastSalesScreen = ({ lastSales }: UseLastSalesScreenProps) => {
       <FlatList
         data={lastSales}
         keyExtractor={item => item.id.toString()}
+        testID="lastSales"
         contentContainerStyle={s.list}
         renderItem={({ item }) => {
           return (

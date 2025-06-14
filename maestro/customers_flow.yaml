@@ -1,0 +1,60 @@
+appId: host.exp.exponent
+env:
+  SEARCH: "CCB BRASIL S/A CREDITO FINANCIAMENTOS E INVESTIMEN - CODIGO B3: SLFN"
+
+---
+- tapOn:
+    id: "Clientes"
+- assertVisible: "Lista de clientes:"
+- swipe:
+    from:
+      id: "customersList"
+    direction: DOWN
+    duration: 1000
+- swipe:
+    from:
+      id: "customersList"
+    direction: UP
+    duration: 3000
+- swipe:
+    from:
+      id: "customersList"
+    direction: DOWN
+    duration: 1000
+# - tapOn:
+#     childOf:
+#       id: "Picker"
+# - tapOn: "CLIENTE PROMO 20"
+# - tapOn: "Limpar"
+- tapOn: "Pesquisar"
+- inputText: "Nao existe"
+- assertVisible: "Nenhum dado encontrado."
+- eraseText
+- tapOn: "Pesquisar"
+- inputText: "CCB"
+- assertVisible: "${SEARCH}"
+- hideKeyboard
+- tapOn: "${SEARCH}"
+- assertVisible: "Compras dos últimos meses (6 meses):"
+- tapOn: "Quantidade"
+- tapOn: "Total"
+- swipe:
+    from:
+      id: "lastSales"
+    direction: UP
+    duration: 3000
+- swipe:
+    from:
+      id: "lastSales"
+    direction: DOWN
+    duration: 1000
+- tapOn:
+    id: "Action"
+- assertVisible: "Sugestão de produtos para o cliente:"
+- tapOn: "Fechar"
+- tapOn:
+    id: "Back"
+- assertVisible: "Lista de clientes:"
+- tapOn:
+    id: "Back"
+- tapOn: "Bem-vindo, Admin"

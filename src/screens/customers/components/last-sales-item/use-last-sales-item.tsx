@@ -26,8 +26,6 @@ const UseLastSalesItem = ({
       <View style={s.infos}>
         <Text style={s.customer}>{description}</Text>
         <Text style={s.date}>Data: {date}</Text>
-        <Text style={s.customer}>{description}</Text>
-        <Text style={s.date}>Data: {date}</Text>
       </View>
 
       <View style={s.counts}>

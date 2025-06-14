@@ -13,8 +13,8 @@ import { UseCustomersItem } from '../components/customers-item/use-customers-ite
 import { s } from './styles'
 
 type UseCustomersListScreenProps = {
-  customers: CustomersListData
-  groups: GroupsListData
+  customers?: CustomersListData
+  groups?: GroupsListData
   setPage: React.Dispatch<React.SetStateAction<number>>
   search: string | undefined
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>
@@ -42,7 +42,7 @@ const UseCustomersListScreen = ({
       <Header title="Clientes" />
 
       <View style={s.header}>
-        <Text style={s.title}>Lista de clientes: </Text>
+        <Text style={s.title}>Lista de clientes:</Text>
 
         <TouchableOpacity style={s.clear} onPress={clearFilterRequest}>
           <Text style={s.clearText}>Limpar</Text>
@@ -57,13 +57,14 @@ const UseCustomersListScreen = ({
             selectedValue={groupId}
             onValueChange={filterRequest}
             prompt="Grupos de clientes"
+            testID="Picker"
           >
             <Picker.Item
               value={undefined}
               label="Filtrar por grupo de clientes"
               enabled={false}
             />
-            {groups.map(group => {
+            {groups?.map(group => {
               return (
                 <Picker.Item
                   key={group.key}
@@ -90,6 +91,7 @@ const UseCustomersListScreen = ({
       <FlatList
         data={customers}
         keyExtractor={item => item.id.toString()}
+        testID="customersList"
         contentContainerStyle={s.list}
         onRefresh={() => setPage(1)}
         refreshing={false}
@@ -103,6 +105,9 @@ const UseCustomersListScreen = ({
               <Loading />
             </View>
           )
+        }
+        ListEmptyComponent={
+          <Text style={s.empty}>Nenhum dado encontrado.</Text>
         }
       />
     </View>

@@ -33,6 +33,7 @@ export function NavigationMenu({ data }: NavigationMenuProps) {
           <View style={s.buttonWrapper}>
             <TouchableOpacity
               style={s.button}
+              testID={item.label}
               onPress={() => navigate.navigate(item.href)}
             >
               <item.icon size={20} color={colors.zinc[50]} />

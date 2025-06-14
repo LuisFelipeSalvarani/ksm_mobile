@@ -1,0 +1,26 @@
+appId: host.exp.exponent
+env:
+  INPUT: "Tarefa"
+
+---
+- tapOn:
+    id: "Tarefas"
+- assertVisible: "Nova tarefa"
+- tapOn: "Nova tarefa"
+- inputText: "${INPUT}"
+- tapOn:
+    id: "addTask"
+- assertVisible: "${INPUT}"
+- assertVisible:
+    id: "conclusion"
+- hideKeyboard
+- tapOn:
+    id: "conclusion"
+- assertNotVisible:
+    id: "conclusion"
+- tapOn:
+    id: "delete"
+- assertNotVisible: "${INPUT}"
+- tapOn:
+    id: "Back"
+- assertVisible: "Bem-vindo, Admin"

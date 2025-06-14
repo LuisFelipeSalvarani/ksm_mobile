@@ -59,6 +59,10 @@ export const colors = {
 
   black: '#000',
 
+  green: '#59A14F',
+
+  red: '#E15759',
+
   chart: [
     '#4E79A7',
     '#F28E2B',

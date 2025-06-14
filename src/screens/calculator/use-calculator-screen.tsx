@@ -76,6 +76,8 @@ export function UseCalculatorScreen() {
   const changeCalc = (option: 'contrib' | 'profit') => {
     setActiveCalc(option)
     setResult('')
+    setPrice('')
+    setCost('')
     const label =
       activeCalc === 'profit' ? 'Margem de Contribuição' : 'Margem de Lucro'
     setResultLabel(`${label}:`)
@@ -119,6 +121,7 @@ export function UseCalculatorScreen() {
           <Pressable
             style={[s.fieldBox, activeField === 'price' && s.fieldActive]}
             onPress={() => setActiveField('price')}
+            testID="priceInput"
           >
             <Text style={s.fieldLabel}>Preço de Venda</Text>
             <Text style={s.fieldValue}>{price || '—'}</Text>
@@ -126,6 +129,7 @@ export function UseCalculatorScreen() {
           <Pressable
             style={[s.fieldBox, activeField === 'cost' && s.fieldActive]}
             onPress={() => setActiveField('cost')}
+            testID="costInput"
           >
             <Text style={s.fieldLabel}>{costLabel}</Text>
             <Text style={s.fieldValue}>{cost || '—'}</Text>
@@ -134,7 +138,11 @@ export function UseCalculatorScreen() {
 
         <View style={s.resultBox}>
           <Text style={s.resultLabel}>{resultLabel}</Text>
-          {result && <Text style={s.resultTxt}>{result}</Text>}
+          {result && (
+            <Text testID="result" style={s.resultTxt}>
+              {result}
+            </Text>
+          )}
         </View>
       </ScrollView>
 
@@ -147,6 +155,7 @@ export function UseCalculatorScreen() {
                 key={label}
                 onPress={() => onKeyPress(label)}
                 style={[s.keyBtn, label === '=' && s.keyEquals]}
+                testID={label}
               >
                 <Text style={s.keyTxt}>{label}</Text>
               </Pressable>

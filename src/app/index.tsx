@@ -4,10 +4,10 @@ import { useLoginContainer } from '@/hooks/use-login-container'
 import { UseLoginScreen } from '@/screens/login/use-login-screen'
 
 export default function Index() {
-  const { onSubmit } = useLoginContainer()
-  const { isLoading } = useAuthenticationContainer()
+  const { onSubmit, isLoading } = useLoginContainer()
+  const { isLoading: isLoadingAuth } = useAuthenticationContainer()
 
-  if (isLoading) return <Loading />
+  if (isLoadingAuth) return <Loading />
 
-  return <UseLoginScreen onSubmit={onSubmit} />
+  return <UseLoginScreen onSubmit={onSubmit} isLoading={isLoading} />
 }

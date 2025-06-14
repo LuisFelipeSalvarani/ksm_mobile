@@ -52,4 +52,10 @@ export const s = StyleSheet.create({
   loadingContainer: {
     height: 40,
   },
+  empty: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    color: colors.zinc[700],
+  },
 })

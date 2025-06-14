@@ -17,12 +17,13 @@ type UseLastSalesProps = {
 const UseLastSales = ({ lastSales }: UseLastSalesProps) => {
   return (
     <View style={s.container}>
-      <Text style={s.title}>Últimas compras`:</Text>
+      <Text style={s.title}>Últimas compras:</Text>
 
       {lastSales.length ? (
         <FlatList
           data={lastSales}
           keyExtractor={item => item.productId}
+          testID="lastSales"
           contentContainerStyle={s.list}
           renderItem={({ item }) => {
             return (

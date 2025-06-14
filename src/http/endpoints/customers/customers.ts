@@ -1,13 +1,16 @@
 // biome-ignore-all lint:
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
@@ -20,10 +23,13 @@ import type {
   GetAllCustomersParams,
   GetCustomerById200,
   GetCustomerById404,
+  GetCustomersNames200,
+  GetCustomersNames404,
+  GetCustomersNamesBody,
 } from '../../models'
 
 import { customInstance } from '../../mutator/custom-instance'
-import type { ErrorType } from '../../mutator/custom-instance'
+import type { ErrorType, BodyType } from '../../mutator/custom-instance'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -508,4 +514,96 @@ export function useGetCustomerById<
   query.queryKey = queryOptions.queryKey
 
   return query
+}
+
+/**
+ * @summary Get customers names
+ */
+export const getCustomersNames = (
+  getCustomersNamesBody: BodyType<GetCustomersNamesBody>,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<GetCustomersNames200>(
+    {
+      url: `/customers/names`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: getCustomersNamesBody,
+      signal,
+    },
+    options
+  )
+}
+
+export const getGetCustomersNamesMutationOptions = <
+  TError = ErrorType<GetCustomersNames404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getCustomersNames>>,
+    TError,
+    { data: BodyType<GetCustomersNamesBody> },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getCustomersNames>>,
+  TError,
+  { data: BodyType<GetCustomersNamesBody> },
+  TContext
+> => {
+  const mutationKey = ['getCustomersNames']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getCustomersNames>>,
+    { data: BodyType<GetCustomersNamesBody> }
+  > = props => {
+    const { data } = props ?? {}
+
+    return getCustomersNames(data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type GetCustomersNamesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getCustomersNames>>
+>
+export type GetCustomersNamesMutationBody = BodyType<GetCustomersNamesBody>
+export type GetCustomersNamesMutationError = ErrorType<GetCustomersNames404>
+
+/**
+ * @summary Get customers names
+ */
+export const useGetCustomersNames = <
+  TError = ErrorType<GetCustomersNames404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof getCustomersNames>>,
+      TError,
+      { data: BodyType<GetCustomersNamesBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof getCustomersNames>>,
+  TError,
+  { data: BodyType<GetCustomersNamesBody> },
+  TContext
+> => {
+  const mutationOptions = getGetCustomersNamesMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
 }
