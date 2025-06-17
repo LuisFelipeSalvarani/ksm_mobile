@@ -6,7 +6,7 @@ import {
   IconMail,
 } from '@tabler/icons-react-native'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
@@ -27,7 +27,16 @@ export function UseLoginScreen({ onSubmit, isLoading }: UseLoginScreenProps) {
 
   return (
     <View style={s.container}>
-      <Text>KSM</Text>
+      <Image
+        source={require('@/assets/kodiak_logo.png')}
+        style={{
+          width: 350,
+          height: 350,
+          marginTop: 64,
+          marginRight: 24,
+          marginBottom: -100,
+        }}
+      />
 
       <View style={s.loginWrapper}>
         <View>
