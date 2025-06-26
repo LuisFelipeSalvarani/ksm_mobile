@@ -1,7 +1,8 @@
 import Axios, { type AxiosError, type AxiosRequestConfig } from 'axios'
-import { env } from '@/utils/env'
 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: env.EXPO_PUBLIC_API_URL })
+export const AXIOS_INSTANCE = Axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+})
 
 export const customInstance = <T>(
   config: AxiosRequestConfig,

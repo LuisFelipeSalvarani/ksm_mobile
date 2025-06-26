@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import axios, { type RawAxiosRequestHeaders } from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import { useGetCustomersNames } from '@/http/endpoints/customers/customers'
-import { env } from '@/utils/env'
 import { getHeaders } from '@/utils/get-headers'
 
 type ProbabilityResponse = {
@@ -26,7 +25,7 @@ function useProbabilityCustomersBuyingContainer() {
       const token = await getHeaders()
 
       const response = await axios.post(
-        `${env.EXPO_PUBLIC_IA_URL}/clientes/compra/probabilidade/top10`,
+        `${process.env.EXPO_PUBLIC_IA_URL}/clientes/compra/probabilidade/top10`,
         { headers: { Authorization: token } }
       )
 

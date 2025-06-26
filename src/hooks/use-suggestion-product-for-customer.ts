@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { env } from '@/utils/env'
 import { getHeaders } from '@/utils/get-headers'
 
 type SuggestionData = {
@@ -18,7 +17,7 @@ function useSuggestionProductsForCustomer(id: number) {
       const token = await getHeaders()
 
       const response = await axios.post(
-        `${env.EXPO_PUBLIC_IA_URL}/produtos/venda/sugerir`,
+        `${process.env.EXPO_PUBLIC_IA_URL}/produtos/venda/sugerir`,
         { cliente_id: id },
         { headers: { Authorization: token } }
       )

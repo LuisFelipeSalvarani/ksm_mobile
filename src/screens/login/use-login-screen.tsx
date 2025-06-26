@@ -26,7 +26,7 @@ export function UseLoginScreen({ onSubmit, isLoading }: UseLoginScreenProps) {
   const [password, setPassword] = useState('')
 
   return (
-    <ScrollView>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View style={s.container}>
         <Image
           source={require('@/assets/kodiak_logo.png')}
@@ -67,6 +67,7 @@ export function UseLoginScreen({ onSubmit, isLoading }: UseLoginScreenProps) {
           <Button
             onPress={() => onSubmit({ email, password })}
             disabled={isLoading}
+            style={{ height: 52 }}
           >
             {isLoading ? (
               <Loading color={colors.zinc[100]} />
